@@ -39,7 +39,7 @@
     |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  |  -  |
     | CAPSW|  A  |  R  |  S  |  T  |  G  |      |  M  |  N   |  E  |  I  |  O  |  '  |
     |   `  |  Z  |  X  |  C  |  D  |  V  |      |  K  |  H   |  ,  |  .  |  /  |  \  |
-                       | LWR | ESC | SPC |      | ENT | BSPC | RSE |
+                       | SYS | ESC | SPC |      | ENT | BSPC | RSE |
 */
             bindings = <
     &kp TAB     &kp Q      &kp W      &kp F      &kp P      &kp B           &kp J     &kp L      &kp U      &kp Y      &kp SEMI   &kp MINUS
@@ -49,8 +49,8 @@
             >;
         };
 
-        lower_layer {
-            display-name = "Lower";
+        system_layer {
+            display-name = "System";
 /*
     |  TAB   |  1  |  2  |  3  |  4  |  5  |      |  6  |  7  |  8  |  9  |  0  | BSPC |
     | OUT_USB| BT1 | BT2 | BT3 | BT4 | BT5 |      | LFT | DWN |  UP | RGT |     |      |
