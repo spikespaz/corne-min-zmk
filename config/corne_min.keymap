@@ -47,6 +47,14 @@
         HRM_R(rhm, homerow_right_middle, 210)
         HRM_R(rhr, homerow_right_ring,  240)
         HRM_R(rhp, homerow_right_pinky, 270)
+
+        /* Tap reset key to reboot, tap twice for bootloader */
+        td_boot: tap_dance_boot {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&sys_reset>, <&bootloader>;
+        };
     };
 
     keymap {
@@ -75,13 +83,13 @@
 /*
     |  F1  |  F2 |  F3 |  F4 |  F5 |   F6   |        |   F7   |  F8 |  F9 | F10 | F11 |  F12 |
     | BTCLR| BT1 | BT2 | BT3 | BT4 |  BT5   |        |        |     |     |     |     |      |
-    | BOOT | RST | PREV|PL/PS| NEXT| OUT_TOG|        |   VO+  | VO- | BR+ | BR- | RST | BOOT |
+    | BOOT |     | PREV|PL/PS| NEXT| OUT_TOG|        |   VO+  | VO- | BR+ | BR- |     | BOOT |
                        |     |     | SPC    |        | ENT    |     |     |
 */
             bindings = <
     &kp F1      &kp F2       &kp F3       &kp F4       &kp F5       &kp F6              &kp F7       &kp F8       &kp F9       &kp F10      &kp F11    &kp F12
     &bt BT_CLR  &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4        &trans       &trans       &trans       &trans       &trans     &trans
-    &bootloader &sys_reset   &kp K_PREV   &kp K_PP     &kp K_NEXT   &out OUT_TOG        &kp K_VOL_UP &kp K_VOL_DN &kp C_BRI_UP &kp C_BRI_DN &sys_reset &bootloader
+    &td_boot    &trans       &kp K_PREV   &kp K_PP     &kp K_NEXT   &out OUT_TOG        &kp K_VOL_UP &kp K_VOL_DN &kp C_BRI_UP &kp C_BRI_DN &trans     &td_boot
     /*          |            |          */&trans       &trans       &kp SPACE           &kp RET      &trans       &trans
             >;
         };
