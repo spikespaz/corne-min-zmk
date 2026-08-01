@@ -14,8 +14,9 @@
 /* hold duration before BT profile clear fires (long to prevent accidental re-pair) */
 #define BT_CLEAR_HOLD_MS 1000
 
-/* v0.3 hold-tap aliases: tap=param2, hold=param1 after 500ms */
+/* v0.3 hold-tap aliases: tap=param2, hold=param1 */
 #define ht_prev ht_kp C_REWIND K_PREV
+#define btp(n) ht_bt_profile n n
 
 /*
  * Sunaku level-0 timings: TAPPING_RESOLUTION=150ms, offsets per finger:
@@ -54,13 +55,6 @@
             compatible = "zmk,behavior-macro-one-param";
             #binding-cells = <1>;
             bindings = <&macro_param_1to2 &bt BT_SEL MACRO_PLACEHOLDER>, <&bt BT_CLR>;
-        };
-
-        /* Tap to switch to profile, hold for BT_CLEAR_HOLD_MS to re-pair the profile */
-        btp: bt_profile {
-            compatible = "zmk,behavior-macro-one-param";
-            #binding-cells = <1>;
-            bindings = <&macro_param_1to1 &macro_param_1to2 &ht_bt_profile MACRO_PLACEHOLDER MACRO_PLACEHOLDER>;
         };
     };
 
@@ -131,7 +125,7 @@
 */
             bindings = <
     &kp F1      &kp F2       &kp F3       &kp F4       &kp F5       &kp F6              &kp F7       &kp F8       &kp F9       &kp F10      &kp F11    &kp F12
-    &trans      &btp 0       &btp 1       &btp 2       &btp 3       &btp 4              &trans       &kp K_VOL_UP &kp C_BRI_UP &trans       &trans     &trans
+    &trans      &btp(0)      &btp(1)      &btp(2)      &btp(3)      &btp(4)             &trans       &kp K_VOL_UP &kp C_BRI_UP &trans       &trans     &trans
     &td_boot    &trans       &ht_prev     &kp K_PP     &kp K_NEXT   &out OUT_TOG        &trans       &kp K_VOL_DN &kp C_BRI_DN &trans       &trans     &td_boot
     /*          |            |          */&trans       &trans       &kp SPACE           &kp RET      &trans       &trans
             >;
