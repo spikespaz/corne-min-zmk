@@ -40,7 +40,8 @@
         name ? board,
         shield,
         enableStudio ? false,
-        enableBLE ? true
+        enableBLE ? true,
+        extraFlags ? []
       }: buildKeyboard {
         inherit name src zephyrDepsHash board shield;
         enableZmkStudio = enableStudio;
@@ -52,7 +53,8 @@
         '';
         extraCmakeFlags =
           lib.optional enableStudio  "-DCONFIG_ZMK_STUDIO_LOCKING=n"
-          ++ lib.optional enableBLE  "-DCONFIG_ZMK_BLE_EXPERIMENTAL_CONN=y";
+          ++ lib.optional enableBLE  "-DCONFIG_ZMK_BLE_EXPERIMENTAL_CONN=y"
+          ++ extraFlags;
       };
 
     in {
@@ -66,6 +68,7 @@
         name = "prospector_for_corne_min";
         shield = "corne_min_dongle prospector_adapter";
         enableStudio = true;
+        extraFlags = [ "-DEXTRA_CFLAGS=-Wno-error=implicit-function-declaration" ];
       };
 
       # nix build .#reset  (clears BLE pairing state)
