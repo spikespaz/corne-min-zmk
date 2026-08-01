@@ -59,13 +59,13 @@
 /*
     |  F1    |  F2 |  F3 |  F4 |  F5 |  F6 |      |   F7  |  F8 |  F9 | F10 | F11 |  F12 |
     | OUT_USB| BT1 | BT2 | BT3 | BT4 | BT5 |      |PLY/NXT| VO+ | BR+ |     |     |      |
-    | SHFT   |     |     |     |     |     |      |MUT/PRV| VO- | BR- |     |     |      |
+    | SHFT   |     |     |     |     |     |      |MUT/PRV| VO- | BR- |     |     |STUDIO|
                          |     |     | SPC |      | ENT   |     |     |
 */
             bindings = <
     &kp F1        &kp F2       &kp F3       &kp F4       &kp F5       &kp F6            &kp F7      &kp F8        &kp F9        &kp F10    &kp F11    &kp F12
     &out OUT_USB  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &play_next  &kp C_VOL_UP  &bri_up_auto  &trans     &trans     &trans
-    &kp LSHFT     &trans       &trans       &trans       &trans       &trans            &mute_prev  &kp C_VOL_DN  &bri_dn_min   &trans     &trans     &trans
+    &kp LSHFT     &trans       &trans       &trans       &trans       &trans            &mute_prev  &kp C_VOL_DN  &bri_dn_min   &trans     &trans     &studio_unlock
     /*            |            |          */&trans       &trans       &kp SPACE         &kp RET     &trans        &trans
             >;
         };
