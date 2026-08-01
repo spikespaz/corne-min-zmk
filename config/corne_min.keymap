@@ -53,7 +53,7 @@
         compatible = "zmk,keymap";
 
         default_layer {
-            display-name = "Base";
+            display-name = "Colemak-DH";
 /*
     Colemak Mod-DH customized by spikespaz
     |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  | BSPC |
