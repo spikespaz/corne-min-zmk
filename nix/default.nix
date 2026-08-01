@@ -32,6 +32,7 @@
     board = "corne_min_%PART%";
     shield = "rgbled_adapter";
     enableZmkStudio = true;
+    extraCmakeFlags = [ "-DCONFIG_ZMK_STUDIO_LOCKING=y" ];
     nativeBuildInputs = [ setuptools-compat ];
     passthru = { reset = resetFirmware; };
   };
