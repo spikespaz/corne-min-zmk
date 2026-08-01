@@ -14,6 +14,9 @@
 /* hold duration before BT profile clear fires (long to prevent accidental re-pair) */
 #define BT_CLEAR_HOLD_MS 1000
 
+/* v0.3 hold-tap aliases: tap=param2, hold=param1 after 500ms */
+#define ht_prev ht_kp C_REWIND K_PREV
+
 /*
  * Sunaku level-0 timings: TAPPING_RESOLUTION=150ms, offsets per finger:
  *   index +30=180ms, middle +60=210ms, ring +90=240ms, pinky +120=270ms
@@ -80,6 +83,14 @@
         HRM_R(rhr, homerow_right_ring,  240)
         HRM_R(rhp, homerow_right_pinky, 270)
 
+        ht_kp: ht_kp {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <500>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
         /* Tap reset key to reboot, tap twice for bootloader */
         td_boot: tap_dance_boot {
             compatible = "zmk,behavior-tap-dance";
@@ -121,7 +132,7 @@
             bindings = <
     &kp F1      &kp F2       &kp F3       &kp F4       &kp F5       &kp F6              &kp F7       &kp F8       &kp F9       &kp F10      &kp F11    &kp F12
     &trans      &btp 0       &btp 1       &btp 2       &btp 3       &btp 4              &trans       &kp K_VOL_UP &kp C_BRI_UP &trans       &trans     &trans
-    &td_boot    &trans       &kp K_PREV   &kp K_PP     &kp K_NEXT   &out OUT_TOG        &trans       &kp K_VOL_DN &kp C_BRI_DN &trans       &trans     &td_boot
+    &td_boot    &trans       &ht_prev     &kp K_PP     &kp K_NEXT   &out OUT_TOG        &trans       &kp K_VOL_DN &kp C_BRI_DN &trans       &trans     &td_boot
     /*          |            |          */&trans       &trans       &kp SPACE           &kp RET      &trans       &trans
             >;
         };
