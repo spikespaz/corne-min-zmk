@@ -71,3 +71,11 @@ COMPLEMENT_HOLD(play_next, &kp C_PP,   &kp C_NEXT, FUNCTION_HOLD_MS)
 /* mute; hold skips back */
 COMPLEMENT_HOLD(mute_prev, &kp C_MUTE, &kp C_PREV, FUNCTION_HOLD_MS)
 #define mute_prev    mute_prev 0 0
+
+/* brightness up; hold sets to auto */
+COMPLEMENT_HOLD(bri_up_auto, &kp C_BRI_UP, &kp C_BRI_AUTO, FUNCTION_HOLD_MS)
+#define bri_up_auto    bri_up_auto 0 0
+
+/* brightness down; hold sets to minimum */
+COMPLEMENT_HOLD(bri_dn_min, &kp C_BRI_DN, &kp C_BRI_MIN, FUNCTION_HOLD_MS)
+#define bri_dn_min    bri_dn_min 0 0
