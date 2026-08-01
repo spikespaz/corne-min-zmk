@@ -11,6 +11,9 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
 
+/* hold duration before BT profile clear fires (long to prevent accidental re-pair) */
+#define BT_CLEAR_HOLD_MS 1000
+
 /*
  * Sunaku level-0 timings: TAPPING_RESOLUTION=150ms, offsets per finger:
  *   index +30=180ms, middle +60=210ms, ring +90=240ms, pinky +120=270ms
@@ -37,7 +40,36 @@
 #define HRM_R(label, name, tt) label: name { HRM_BASE tapping-term-ms = <tt>; bindings = <&kp &kp>; hold-trigger-key-positions = <KEYS_L>; };
 
 / {
+    macros {
+        bt_sel: bt_sel {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to2 &bt BT_SEL MACRO_PLACEHOLDER>;
+        };
+
+        bt_clr_sel: bt_clr_sel {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to2 &bt BT_SEL MACRO_PLACEHOLDER>, <&bt BT_CLR>;
+        };
+
+        /* Tap to switch to profile, hold for BT_CLEAR_HOLD_MS to re-pair the profile */
+        btp: bt_profile {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to1 &macro_param_1to2 &ht_bt_profile MACRO_PLACEHOLDER MACRO_PLACEHOLDER>;
+        };
+    };
+
     behaviors {
+        ht_bt_profile: ht_bt_profile {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <BT_CLEAR_HOLD_MS>;
+            flavor = "tap-preferred"; /* important */
+            bindings = <&bt_clr_sel>, <&bt_sel>;
+        };
+
         /* GACS outer→inner: pinky=GUI, ring=ALT, middle=CTL, index=SFT */
         HRM_L(lhp, homerow_left_pinky,  270)
         HRM_L(lhr, homerow_left_ring,   240)
@@ -82,13 +114,13 @@
             display-name = "System";
 /*
     |  F1  |  F2 |  F3 |  F4 |  F5 |   F6   |        |   F7   |  F8  |  F9  | F10 | F11 |  F12 |
-    | BTCLR| BT1 | BT2 | BT3 | BT4 |  BT5   |        |        | VO+  | BR+  |     |     |      |
+    |      | BT0 | BT1 | BT2 | BT3 |  BT4   |        |        | VO+  | BR+  |     |     |      |
     | BOOT |     | PREV|PL/PS| NEXT| OUT_TOG|        |        | VO-  | BR-  |     |     | BOOT |
                        |     |     | SPC    |        | ENT    |      |      |
 */
             bindings = <
     &kp F1      &kp F2       &kp F3       &kp F4       &kp F5       &kp F6              &kp F7       &kp F8       &kp F9       &kp F10      &kp F11    &kp F12
-    &bt BT_CLR  &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4        &trans       &kp K_VOL_UP &kp C_BRI_UP &trans       &trans     &trans
+    &trans      &btp 0       &btp 1       &btp 2       &btp 3       &btp 4              &trans       &kp K_VOL_UP &kp C_BRI_UP &trans       &trans     &trans
     &td_boot    &trans       &kp K_PREV   &kp K_PP     &kp K_NEXT   &out OUT_TOG        &trans       &kp K_VOL_DN &kp C_BRI_DN &trans       &trans     &td_boot
     /*          |            |          */&trans       &trans       &kp SPACE           &kp RET      &trans       &trans
             >;
