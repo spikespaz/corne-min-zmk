@@ -63,9 +63,9 @@
                          |     |     | SPC |      | ENT   |     |     |
 */
             bindings = <
-    &kp F1        &kp F2       &kp F3       &kp F4       &kp F5       &kp F6            &kp F7      &kp F8        &kp F9        &kp F10  &kp F11    &kp F12
-    &out OUT_USB  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &play_next  &kp C_VOL_UP  &kp C_BRI_UP  &trans   &trans     &trans
-    &kp LSHFT     &trans       &trans       &trans       &trans       &trans            &mute_prev  &kp C_VOL_DN  &kp C_BRI_DN  &trans   &trans     &trans
+    &kp F1        &kp F2       &kp F3       &kp F4       &kp F5       &kp F6            &kp F7      &kp F8        &kp F9        &kp F10    &kp F11    &kp F12
+    &out OUT_USB  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &play_next  &kp C_VOL_UP  &bri_up_auto  &trans     &trans     &trans
+    &kp LSHFT     &trans       &trans       &trans       &trans       &trans            &mute_prev  &kp C_VOL_DN  &bri_dn_min   &trans     &trans     &trans
     /*            |            |          */&trans       &trans       &kp SPACE         &kp RET     &trans        &trans
             >;
         };
