@@ -54,13 +54,13 @@
 /*
     |  F1    |  F2 |  F3 |  F4 |  F5 |  F6 |      |  F7 |  F8 |  F9 | F10 | F11 |  F12 |
     | OUT_USB| BT1 | BT2 | BT3 | BT4 | BT5 |      |     | VO+ | BR+ |     |     |      |
-    | SHFT   |     |     |     |     |     |      |     | VO- | BR- |     |     |      |
+    | SHFT   |     | PREV| PP  | NEXT|     |      |     | VO- | BR- |     |     |      |
                          |     |     | SPC |      | ENT |     |     |
 */
             bindings = <
     &kp F1        &kp F2       &kp F3       &kp F4       &kp F5       &kp F6            &kp F7   &kp F8        &kp F9        &kp F10  &kp F11    &kp F12
     &out OUT_USB  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &trans   &kp C_VOL_UP  &kp C_BRI_UP  &trans   &trans     &trans
-    &kp LSHFT     &trans       &trans       &trans       &trans       &trans            &trans   &kp C_VOL_DN  &kp C_BRI_DN  &trans   &trans     &trans
+    &kp LSHFT     &trans       &kp C_PREV   &kp C_PP     &kp C_NEXT   &trans            &trans   &kp C_VOL_DN  &kp C_BRI_DN  &trans   &trans     &trans
     /*            |            |          */&trans       &trans       &kp SPACE         &kp RET  &trans        &trans
             >;
         };
