@@ -59,7 +59,7 @@
 
 /* FUNCTION_HOLD_MS: dwell for everyday keyboard functions (media, brightness,
  * volume). More consequential complements take a longer term of their own
- * (e.g. DESTRUCTIVE_HOLD_MS). */
+ * (e.g. DELIBERATE_HOLD_MS). */
 #ifndef FUNCTION_HOLD_MS
 #define FUNCTION_HOLD_MS    600
 #endif
@@ -79,3 +79,16 @@ COMPLEMENT_HOLD(bri_up_auto, &kp C_BRI_UP, &kp C_BRI_AUTO, FUNCTION_HOLD_MS)
 /* brightness down; hold sets to minimum */
 COMPLEMENT_HOLD(bri_dn_min, &kp C_BRI_DN, &kp C_BRI_MIN, FUNCTION_HOLD_MS)
 #define bri_dn_min    bri_dn_min 0 0
+
+
+/* DELIBERATE_HOLD_MS: dwell for holds that must be clearly intended -- a longer
+ * press guarding costly actions (power-off, studio unlock, BT clear) against an
+ * accidental trigger.
+ */
+#ifndef DELIBERATE_HOLD_MS
+#define DELIBERATE_HOLD_MS    1000
+#endif
+
+/* keyboard soft-off; hold unlocks keymap for ZMK studio */
+COMPLEMENT_HOLD(power_studio, &soft_off, &studio_unlock, DELIBERATE_HOLD_MS)
+#define power_studio    power_studio 0 0
