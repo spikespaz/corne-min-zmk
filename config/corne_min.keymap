@@ -97,15 +97,15 @@
 /*
     Colemak Mod-DH customized by spikespaz
 
-    |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  |      |
-    | CAPSW|  A  |  R  |  S  |  T  |  G  |      |  M  |  N   |  E  |  I  |  O  |  '   |
-    |      |  Z  |  X  |  C  |  D  |  V  |      |  K  |  H   |  ,  |  .  |  /  |      |
+    |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  |  -  |
+    | CAPSW|  A  |  R  |  S  |  T  |  G  |      |  M  |  N   |  E  |  I  |  O  |  '  |
+    |   `  |  Z  |  X  |  C  |  D  |  V  |      |  K  |  H   |  ,  |  .  |  /  |  \  |
                        | SYS | ESC | SPC |      | BSPC| RET  | SYS |
 */
             bindings = <
-    &kp TAB    &kp Q        &kp W        &kp F        &kp P        &kp B         &kp J    &kp L        &kp U        &kp Y        &kp SEMI     &trans
+    &kp TAB    &kp Q        &kp W        &kp F        &kp P        &kp B         &kp J    &kp L        &kp U        &kp Y        &kp SEMI     &kp MINUS
     &caps_word &lhp LGUI A  &lhr LALT R  &lhm LCTL S  &lhi LSFT T  &kp G         &kp M    &rhi RSFT N  &rhm RCTL E  &rhr RALT I  &rhp RGUI O  &kp SQT
-    &trans     &kp Z        &kp X        &kp C        &kp D        &kp V         &kp K    &kp H        &kp COMMA    &kp DOT      &kp FSLH     &trans
+    &kp GRAVE  &kp Z        &kp X        &kp C        &kp D        &kp V         &kp K    &kp H        &kp COMMA    &kp DOT      &kp FSLH     &kp BSLH
     /*         |            |          */&mo 1        &kp ESC      &kp SPACE     &kp BSPC &kp RET      &mo 1
             >;
         };
