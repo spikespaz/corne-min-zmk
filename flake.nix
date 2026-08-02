@@ -30,13 +30,17 @@
 
       zephyrDepsHash = "sha256-qB4DEL4UldZoZc6C60reewAcwfbfR7SLuK2grfyMZuY=";
 
-      # nanopb generator imports pkg_resources (removed in setuptools ≥82);
-      # shim it so protobuf codegen for ZMK Studio works.
-      nanopbCompatSed =
-        ''s|\([[:space:]]*\)import pkg_resources$''
-        + ''|\1import importlib.resources as _ilr, types as _t\n''
-        + ''\1pkg_resources = _t.SimpleNamespace(''
-        + ''resource_filename=lambda pkg, path: str(_ilr.files(pkg) / path))|'';
+      # grpcio-tools ≥1.82 dropped setuptools from propagatedBuildInputs;
+      # setuptools ≥82 removed pkg_resources. Inject setuptools 80.9.0 via
+      # nativeBuildInputs so the nanopb generator can import pkg_resources.
+      setuptools-compat = pkgs.python3Packages.setuptools.overridePythonAttrs (_: rec {
+        version = "80.9.0";
+        src = pkgs.python3Packages.fetchPypi {
+          pname = "setuptools";
+          inherit version;
+          hash = "sha256-82tHQC7N52jb+vxG6OQge0NgxlTx87uER18KKGKPsZw=";
+        };
+      });
 
     in {
       # nix build .#firmware  (both halves; left is central with ZMK Studio)
@@ -47,12 +51,7 @@
         board = "corne_min_%PART%";
         shield = "rgbled_adapter";
         enableZmkStudio = true;
-        postConfigure = ''
-          if [ -d ../modules/lib/nanopb/generator ]; then
-            find ../modules/lib/nanopb/generator -name "*.py" \
-              -exec sed -i '${nanopbCompatSed}' {} +
-          fi
-        '';
+        nativeBuildInputs = [ setuptools-compat ];
       };
 
       inherit (self.packages.${system}.firmware) left right;
