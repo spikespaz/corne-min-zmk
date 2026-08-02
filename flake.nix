@@ -14,12 +14,14 @@
     eachSystem = lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
     pkgsFor = eachSystem (system: import nixpkgs {
       localSystem.system = system;
-      overlays = [ zmk-nix.overlays.default ];
+      overlays = [
+        (final: _: { zmkBuilders = zmk-nix.lib.buildersFor final; })
+      ];
     });
   in {
     packages = eachSystem (system: let
       pkgs = pkgsFor.${system};
-      inherit (pkgs) buildKeyboard buildSplitKeyboard;
+      inherit (pkgs.zmkBuilders) buildKeyboard buildSplitKeyboard;
 
       src = lib.sourceFilesBySuffices self [
         ".board" ".cmake" ".conf" ".defconfig" ".dts" ".dtsi"
