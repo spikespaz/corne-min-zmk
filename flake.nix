@@ -69,6 +69,13 @@
       default = self.packages.${system}.firmware;
     });
 
+    apps = eachSystem (system: {
+      flash  = { type = "app"; program = lib.getExe self.packages.${system}.flash; };
+      update = { type = "app"; program = lib.getExe self.packages.${system}.update; };
+
+      default = self.apps.${system}.flash;
+    });
+
     devShells = eachSystem (system: {
       default = pkgsFor.${system}.callPackage "${zmk-nix}/nix/shell.nix" {};
     });
