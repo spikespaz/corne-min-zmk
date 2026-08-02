@@ -16,58 +16,71 @@
       localSystem.system = system;
       overlays = [
         (final: _: { zmkBuilders = zmk-nix.lib.buildersFor final; })
+        self.overlays.default
       ];
     });
+
   in {
+    overlays = {
+      default = final: _: let
+        inherit (final.zmkBuilders) buildKeyboard buildSplitKeyboard;
+
+        src = lib.sourceFilesBySuffices self [
+          ".board" ".cmake" ".conf" ".defconfig" ".dts" ".dtsi"
+          ".json" ".keymap" ".overlay" ".shield" ".yml" "_defconfig"
+        ];
+
+        zephyrDepsHash = "sha256-qB4DEL4UldZoZc6C60reewAcwfbfR7SLuK2grfyMZuY=";
+
+        # grpcio-tools ≥1.82 dropped setuptools from propagatedBuildInputs;
+        # setuptools ≥82 removed pkg_resources. Inject setuptools 80.9.0 via
+        # nativeBuildInputs so the nanopb generator can import pkg_resources.
+        setuptools-compat = final.python3Packages.setuptools.overridePythonAttrs (_: rec {
+          version = "80.9.0";
+          src = final.python3Packages.fetchPypi {
+            pname = "setuptools";
+            inherit version;
+            hash = "sha256-82tHQC7N52jb+vxG6OQge0NgxlTx87uER18KKGKPsZw=";
+          };
+        });
+
+      in {
+        corne-min-firmware = lib.makeOverridable buildSplitKeyboard {
+          inherit src zephyrDepsHash;
+          name = "corne_min";
+          board = "corne_min_%PART%";
+          shield = "rgbled_adapter";
+          enableZmkStudio = true;
+          nativeBuildInputs = [ setuptools-compat ];
+        };
+
+        # nix build .#reset  (clears BLE pairing state)
+        corne-min-reset = buildKeyboard {
+          inherit src zephyrDepsHash;
+          name = "corne_min_settings_reset";
+          board = "corne_min_left";
+          shield = "settings_reset";
+        };
+      };
+    };
+
     packages = eachSystem (system: let
       pkgs = pkgsFor.${system};
-      inherit (pkgs.zmkBuilders) buildKeyboard buildSplitKeyboard;
-
-      src = lib.sourceFilesBySuffices self [
-        ".board" ".cmake" ".conf" ".defconfig" ".dts" ".dtsi"
-        ".json" ".keymap" ".overlay" ".shield" ".yml" "_defconfig"
-      ];
-
-      zephyrDepsHash = "sha256-qB4DEL4UldZoZc6C60reewAcwfbfR7SLuK2grfyMZuY=";
-
-      # grpcio-tools ≥1.82 dropped setuptools from propagatedBuildInputs;
-      # setuptools ≥82 removed pkg_resources. Inject setuptools 80.9.0 via
-      # nativeBuildInputs so the nanopb generator can import pkg_resources.
-      setuptools-compat = pkgs.python3Packages.setuptools.overridePythonAttrs (_: rec {
-        version = "80.9.0";
-        src = pkgs.python3Packages.fetchPypi {
-          pname = "setuptools";
-          inherit version;
-          hash = "sha256-82tHQC7N52jb+vxG6OQge0NgxlTx87uER18KKGKPsZw=";
-        };
-      });
-
     in {
-      # nix build .#firmware  (both halves; left is central with ZMK Studio)
-      # nix build .#left / .#right  (individual halves)
-      firmware = lib.makeOverridable buildSplitKeyboard {
-        inherit src zephyrDepsHash;
-        name = "corne_min";
-        board = "corne_min_%PART%";
-        shield = "rgbled_adapter";
-        enableZmkStudio = true;
-        nativeBuildInputs = [ setuptools-compat ];
-      };
+      # nix build .#firmware  (both halves; left is central)
+      firmware = pkgs.corne-min-firmware;
 
-      inherit (self.packages.${system}.firmware) left right;
+      # nix build .#left / .#right  (individual halves)
+      inherit (pkgs.corne-min-firmware) left right;
 
       # nix build .#reset  (clears BLE pairing state)
-      reset = buildKeyboard {
-        inherit src zephyrDepsHash;
-        name = "corne_min_settings_reset";
-        board = "corne_min_left";
-        shield = "settings_reset";
-      };
+      reset   = pkgs.corne-min-reset;
 
-      flash   = pkgs.callPackage "${zmk-nix}/nix/flash.nix" { firmware = self.packages.${system}.firmware; };
+      flash   = pkgs.callPackage "${zmk-nix}/nix/flash.nix" { firmware = pkgs.corne-min-firmware; };
       update  = pkgs.callPackage "${zmk-nix}/nix/update.nix" {};
 
-      default = self.packages.${system}.firmware;
+      # nix build .#default  (both halves; left is central)
+      default = pkgs.corne-min-firmware;
     });
 
     apps = eachSystem (system: {
