@@ -14,12 +14,18 @@
     eachSystem = lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
     pkgsFor = eachSystem (system: import nixpkgs {
       localSystem.system = system;
-      overlays = [ zmk-nix.overlays.default ];
+      overlays = [
+        # This is a workaround to replace the default zmk-nix overlay,
+        # which uses `prev` to instantiate the builders. That's a bug.
+        # Also questionable is introducing two Zephyr helpers where the scope of
+        # the flake is supposed to be ZMK keyboards, so here the scope is `zmkBuilders`.
+        (final: _: { zmkBuilders = zmk-nix.lib.buildersFor final; })
+      ];
     });
   in {
     packages = eachSystem (system: let
       pkgs = pkgsFor.${system};
-      inherit (pkgs) buildKeyboard buildSplitKeyboard;
+      inherit (pkgs.zmkBuilders) buildKeyboard buildSplitKeyboard;
 
       src = lib.sourceFilesBySuffices self [
         ".board" ".cmake" ".conf" ".defconfig" ".dts" ".dtsi"
