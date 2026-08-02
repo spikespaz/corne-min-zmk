@@ -44,23 +44,26 @@
           };
         });
 
-      in {
-        corne-min-firmware = lib.makeOverridable buildSplitKeyboard {
+        firmware = buildSplitKeyboard {
           inherit src zephyrDepsHash;
           name = "corne_min";
           board = "corne_min_%PART%";
           shield = "rgbled_adapter";
           enableZmkStudio = true;
           nativeBuildInputs = [ setuptools-compat ];
+          passthru = { reset = resetFirmware; };
         };
 
         # nix build .#reset  (clears BLE pairing state)
-        corne-min-reset = buildKeyboard {
+        resetFirmware = buildKeyboard {
           inherit src zephyrDepsHash;
           name = "corne_min_settings_reset";
           board = "corne_min_left";
           shield = "settings_reset";
         };
+
+      in {
+        corne-min-firmware = firmware;
       };
     };
 
@@ -71,10 +74,8 @@
       firmware = pkgs.corne-min-firmware;
 
       # nix build .#left / .#right  (individual halves)
-      inherit (pkgs.corne-min-firmware) left right;
-
-      # nix build .#reset  (clears BLE pairing state)
-      reset   = pkgs.corne-min-reset;
+      # nix build .#reset (clears left half BLE pairing state)
+      inherit (pkgs.corne-min-firmware) left right reset;
 
       flash   = pkgs.callPackage "${zmk-nix}/nix/flash.nix" { firmware = pkgs.corne-min-firmware; };
       update  = pkgs.callPackage "${zmk-nix}/nix/update.nix" {};
