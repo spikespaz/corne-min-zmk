@@ -1,23 +1,6 @@
-# This file generates the GitHub Actions matrix.
-# For simple board + shield combinations, add them to the top level board and
-# shield arrays, for more control, add individual board + shield combinations
-# to the `include` property. You can also use the `cmake-args` property to
-# pass flags to the build command and `artifact-name` to assign a name to
-# distinguish build outputs from each other:
-#
-# board: [ "nice_nano_v2" ]
-# shield: [ "corne_left", "corne_right" ]
-# include:
-#   - board: bdn9_rev2
-#   - board: nice_nano_v2
-#     shield: reviung41
-#   - board: nice_nano_v2
-#     shield: corne_left
-#     cmake-args: -DCONFIG_ZMK_USB_LOGGING=y
-#     artifact-name: corne_left_with_logging
-#
 ---
 include:
+  # Standard retail split: left half is central, holds keymap and ZMK Studio.
   - board: corne_min_left
     shield: rgbled_adapter
     snippet: studio-rpc-usb-uart
@@ -26,18 +9,24 @@ include:
     shield: rgbled_adapter
     artifact-name: corne_min_right
 
+  # Prospector dongle setup: dongle is central, both keyboard halves are peripherals.
+  # The dongle hosts the keymap via the corne_min_dongle shield (mock kscan + transform).
   - board: seeeduino_xiao_ble
     shield: corne_min_dongle prospector_adapter
     snippet: studio-rpc-usb-uart
-    artifact-name: prospector_for_corne_min
+    artifact-name: corne_min_dongle
   - board: seeeduino_xiao_ble
     shield: settings_reset
-    artifact-name: prospector_settings_reset
+    artifact-name: corne_min_dongle_settings_reset
 
+  # Left half re-flashed as a peripheral for the prospector setup.
+  # ZMK_SPLIT_ROLE_CENTRAL=n overrides the left board's default of central.
   - board: corne_min_left
     shield: rgbled_adapter
     cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
-    artifact-name: corne_min_left_for_prospector
+    artifact-name: corne_min_left_peripheral
+
+  # Flash on either half to clear BT bonds and persisted settings.
   - board: corne_min_left
     shield: settings_reset
     artifact-name: corne_min_settings_reset
