@@ -21,13 +21,8 @@ include:
   - board: corne_min_left
     shield: rgbled_adapter
     snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n -DCONFIG_ZMK_BLE_EXPERIMENTAL_CONN=y
-    artifact-name: corne_min_left_with_studio
-  - board: corne_min_left
-    shield: rgbled_adapter
-    snippet: studio-rpc-usb-uart
     cmake-args: -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n -DCONFIG_ZMK_BLE_EXPERIMENTAL_CONN=y -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING=y -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY=y
-    artifact-name: corne_min_left_with_studio_and_peripheral_battery_reporting
+    artifact-name: corne_min_left
   - board: corne_min_right
     shield: rgbled_adapter
     cmake-args: -DCONFIG_ZMK_BLE_EXPERIMENTAL_CONN=y
