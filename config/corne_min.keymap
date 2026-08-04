@@ -77,6 +77,10 @@
 
 #define HRM(name, ...) \
     / { behaviors { name: name { HRM_CORE; __VA_ARGS__ }; }; };
+#define HRM_L(name, ...) \
+    HRM(name, bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>; __VA_ARGS__)
+#define HRM_R(name, ...) \
+    HRM(name, bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>; __VA_ARGS__)
 
 /* Conditional shift properties — each expands to its property or nothing,
  * keeping #ifdef out of DTS node bodies. */
@@ -197,11 +201,11 @@
 };
 
 /* GACS homerow mods, outer→inner: pinky=GUI, ring=ALT, middle=CTL, index=SFT */
-HRM(lhp, tapping-term-ms = <PINKY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>;)
-HRM(lhr, tapping-term-ms = <RINGY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>;)
-HRM(lhm, tapping-term-ms = <MIDDY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>;)
-HRM(lhi, tapping-term-ms = <INDEX_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>; SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
-HRM(rhi, tapping-term-ms = <INDEX_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>; SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
-HRM(rhm, tapping-term-ms = <MIDDY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>;)
-HRM(rhr, tapping-term-ms = <RINGY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>;)
-HRM(rhp, tapping-term-ms = <PINKY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>;)
+HRM_L(lhp, tapping-term-ms = <PINKY_HOLDING_TIME>;)
+HRM_L(lhr, tapping-term-ms = <RINGY_HOLDING_TIME>;)
+HRM_L(lhm, tapping-term-ms = <MIDDY_HOLDING_TIME>;)
+HRM_L(lhi, tapping-term-ms = <INDEX_HOLDING_TIME>; SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM_R(rhi, tapping-term-ms = <INDEX_HOLDING_TIME>; SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM_R(rhm, tapping-term-ms = <MIDDY_HOLDING_TIME>;)
+HRM_R(rhr, tapping-term-ms = <RINGY_HOLDING_TIME>;)
+HRM_R(rhp, tapping-term-ms = <PINKY_HOLDING_TIME>;)
