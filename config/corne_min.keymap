@@ -18,11 +18,23 @@
 #define bt_p(n) ht_bt_profile n n
 
 /*
- * Sunaku level-0 timings: TAPPING_RESOLUTION=150ms, offsets per finger:
- *   index +30=180ms, middle +60=210ms, ring +90=240ms, pinky +120=270ms
- * STREAK_DECAY (require-prior-idle-ms) = 150ms
- * REPEAT_DECAY (quick-tap-ms)          = 300ms
- *
+ * Sunaku-style timing constants, derived from a single base resolution.
+ * TAPPING_RESOLUTION is the global base; all other thresholds are offsets.
+ *   PINKY +120, RINGY +90, MIDDY +60, INDEX +30 (faster fingers = shorter hold)
+ * HOMEY_STREAK_DECAY -> require-prior-idle-ms: suppresses HRM during typing bursts
+ * HOMEY_REPEAT_DECAY -> quick-tap-ms: tap-then-hold within this window = key repeat
+ */
+#define TAPPING_RESOLUTION    150
+
+#define PINKY_HOLDING_TIME    (TAPPING_RESOLUTION + 120)
+#define RINGY_HOLDING_TIME    (TAPPING_RESOLUTION +  90)
+#define MIDDY_HOLDING_TIME    (TAPPING_RESOLUTION +  60)
+#define INDEX_HOLDING_TIME    (TAPPING_RESOLUTION +  30)
+
+#define HOMEY_STREAK_DECAY    TAPPING_RESOLUTION
+#define HOMEY_REPEAT_DECAY    (TAPPING_RESOLUTION + 150)
+
+/*
  * ZMK v0.3: zmk,behavior-hold-tap forces #binding-cells = <2> (const via
  * two_param.yaml) and bindings type is `phandles` — bare refs, no args.
  * The mod is therefore supplied at the keymap call site: &lhp LGUI A.
@@ -30,9 +42,9 @@
 #define HRM_BASE \
     compatible = "zmk,behavior-hold-tap"; \
     #binding-cells = <2>; \
-    flavor = "balanced"; \
-    quick-tap-ms = <300>; \
-    require-prior-idle-ms = <150>; \
+    flavor = "tap-preferred"; \
+    quick-tap-ms = <HOMEY_REPEAT_DECAY>; \
+    require-prior-idle-ms = <HOMEY_STREAK_DECAY>; \
     hold-trigger-on-release;
 
 /* standard 42-key Corne positions (index = order in keymap bindings) */
@@ -67,14 +79,14 @@
         };
 
         /* GACS outer→inner: pinky=GUI, ring=ALT, middle=CTL, index=SFT */
-        HRM_L(lhp, homerow_left_pinky,  270)
-        HRM_L(lhr, homerow_left_ring,   240)
-        HRM_L(lhm, homerow_left_middle, 210)
-        HRM_L(lhi, homerow_left_index,  180)
-        HRM_R(rhi, homerow_right_index, 180)
-        HRM_R(rhm, homerow_right_middle, 210)
-        HRM_R(rhr, homerow_right_ring,  240)
-        HRM_R(rhp, homerow_right_pinky, 270)
+        HRM_L(lhp, homerow_left_pinky,   PINKY_HOLDING_TIME)
+        HRM_L(lhr, homerow_left_ring,    RINGY_HOLDING_TIME)
+        HRM_L(lhm, homerow_left_middle,  MIDDY_HOLDING_TIME)
+        HRM_L(lhi, homerow_left_index,   INDEX_HOLDING_TIME)
+        HRM_R(rhi, homerow_right_index,  INDEX_HOLDING_TIME)
+        HRM_R(rhm, homerow_right_middle, MIDDY_HOLDING_TIME)
+        HRM_R(rhr, homerow_right_ring,   RINGY_HOLDING_TIME)
+        HRM_R(rhp, homerow_right_pinky,  PINKY_HOLDING_TIME)
     };
 
     keymap {
