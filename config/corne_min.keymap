@@ -16,9 +16,14 @@
 
 /* SHIFT_FORGIVENESS: hold-while-undecided on index HRMs for instant shift feel.
  * Provisionally registers shift the moment the key is held; reverses it if
- * resolved as a tap.  Add retro-tap (see behaviors block) to also recover
- * slow standalone holds that expire past the tapping-term. */
+ * resolved as a tap. */
 #define SHIFT_FORGIVENESS
+
+/* SHIFT_RETRO_TAP: retro-tap on index HRMs — fires the tap character when a
+ * slow standalone hold expires past the tapping-term without pressing anything.
+ * Pairs naturally with SHIFT_FORGIVENESS to cover both the fast and slow cases,
+ * but is independently useful if SHIFT_FORGIVENESS is disabled. */
+// #define SHIFT_RETRO_TAP
 
 /* v0.3 hold-tap aliases: tap=param2, hold=param1 */
 #define bt_p(n) ht_bt_profile n n
@@ -113,7 +118,9 @@
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <KEYS_R>;
             hold-while-undecided;
-            // retro-tap;
+#ifdef SHIFT_RETRO_TAP
+            retro-tap;
+#endif
         };
         rhi: homerow_right_index {
             HRM_BASE
@@ -121,7 +128,9 @@
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <KEYS_L>;
             hold-while-undecided;
-            // retro-tap;
+#ifdef SHIFT_RETRO_TAP
+            retro-tap;
+#endif
         };
 #else
         HRM_L(lhi, homerow_left_index,   INDEX_HOLDING_TIME)
