@@ -75,23 +75,10 @@
     require-prior-idle-ms = <HOMEY_STREAK_DECAY>; \
     hold-trigger-on-release
 
-#define HRM_L(name, ...) \
-    / { behaviors { name: name { HRM_CORE; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>; __VA_ARGS__ }; }; };
-#define HRM_R(name, ...) \
-    / { behaviors { name: name { HRM_CORE; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>; __VA_ARGS__ }; }; };
-
-/* Conditional shift properties — each expands to its property or nothing,
- * keeping #ifdef out of DTS node bodies. */
-#ifdef SHIFT_INSTANT_MOD
-#define SHIFT_INSTANT_MOD_PROP  hold-while-undecided;
-#else
-#define SHIFT_INSTANT_MOD_PROP
-#endif
-#ifdef SHIFT_RECOVER_TAP
-#define SHIFT_RECOVER_TAP_PROP  retro-tap;
-#else
-#define SHIFT_RECOVER_TAP_PROP
-#endif
+#define HRM_L(name, tt, ...) \
+    / { behaviors { name: name { HRM_CORE; tapping-term-ms = <tt>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>; __VA_ARGS__ }; }; };
+#define HRM_R(name, tt, ...) \
+    / { behaviors { name: name { HRM_CORE; tapping-term-ms = <tt>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>; __VA_ARGS__ }; }; };
 
 / {
     macros {
@@ -198,12 +185,25 @@
     };
 };
 
+/* Conditional shift properties — each expands to its property or nothing,
+ * keeping #ifdef out of DTS node bodies. */
+#ifdef SHIFT_INSTANT_MOD
+#define SHIFT_INSTANT_MOD_PROP  hold-while-undecided;
+#else
+#define SHIFT_INSTANT_MOD_PROP
+#endif
+#ifdef SHIFT_RECOVER_TAP
+#define SHIFT_RECOVER_TAP_PROP  retro-tap;
+#else
+#define SHIFT_RECOVER_TAP_PROP
+#endif
+
 /* GACS homerow mods, outer→inner: pinky=GUI, ring=ALT, middle=CTL, index=SFT */
-HRM_L(lhp, tapping-term-ms = <PINKY_HOLDING_TIME>;)
-HRM_L(lhr, tapping-term-ms = <RINGY_HOLDING_TIME>;)
-HRM_L(lhm, tapping-term-ms = <MIDDY_HOLDING_TIME>;)
-HRM_L(lhi, tapping-term-ms = <INDEX_HOLDING_TIME>; SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
-HRM_R(rhi, tapping-term-ms = <INDEX_HOLDING_TIME>; SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
-HRM_R(rhm, tapping-term-ms = <MIDDY_HOLDING_TIME>;)
-HRM_R(rhr, tapping-term-ms = <RINGY_HOLDING_TIME>;)
-HRM_R(rhp, tapping-term-ms = <PINKY_HOLDING_TIME>;)
+HRM_L(lhp, PINKY_HOLDING_TIME)
+HRM_L(lhr, RINGY_HOLDING_TIME)
+HRM_L(lhm, MIDDY_HOLDING_TIME)
+HRM_L(lhi, INDEX_HOLDING_TIME, SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM_R(rhi, INDEX_HOLDING_TIME, SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM_R(rhm, MIDDY_HOLDING_TIME)
+HRM_R(rhr, RINGY_HOLDING_TIME)
+HRM_R(rhp, PINKY_HOLDING_TIME)
