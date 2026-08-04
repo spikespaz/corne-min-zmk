@@ -14,6 +14,12 @@
 /* hold duration before BT profile clear fires (long to prevent accidental re-pair) */
 #define BT_CLEAR_HOLD_MS 1000
 
+/* SHIFT_FORGIVENESS: hold-while-undecided on index HRMs for instant shift feel.
+ * Provisionally registers shift the moment the key is held; reverses it if
+ * resolved as a tap.  Add retro-tap (see behaviors block) to also recover
+ * slow standalone holds that expire past the tapping-term. */
+#define SHIFT_FORGIVENESS
+
 /* v0.3 hold-tap aliases: tap=param2, hold=param1 */
 #define bt_p(n) ht_bt_profile n n
 
@@ -99,8 +105,29 @@
         HRM_L(lhp, homerow_left_pinky,   PINKY_HOLDING_TIME)
         HRM_L(lhr, homerow_left_ring,    RINGY_HOLDING_TIME)
         HRM_L(lhm, homerow_left_middle,  MIDDY_HOLDING_TIME)
+
+#ifdef SHIFT_FORGIVENESS
+        lhi: homerow_left_index {
+            HRM_BASE
+            tapping-term-ms = <INDEX_HOLDING_TIME>;
+            bindings = <&kp>, <&kp>;
+            hold-trigger-key-positions = <KEYS_R>;
+            hold-while-undecided;
+            // retro-tap;
+        };
+        rhi: homerow_right_index {
+            HRM_BASE
+            tapping-term-ms = <INDEX_HOLDING_TIME>;
+            bindings = <&kp>, <&kp>;
+            hold-trigger-key-positions = <KEYS_L>;
+            hold-while-undecided;
+            // retro-tap;
+        };
+#else
         HRM_L(lhi, homerow_left_index,   INDEX_HOLDING_TIME)
         HRM_R(rhi, homerow_right_index,  INDEX_HOLDING_TIME)
+#endif
+
         HRM_R(rhm, homerow_right_middle, MIDDY_HOLDING_TIME)
         HRM_R(rhr, homerow_right_ring,   RINGY_HOLDING_TIME)
         HRM_R(rhp, homerow_right_pinky,  PINKY_HOLDING_TIME)
