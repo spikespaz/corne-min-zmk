@@ -66,28 +66,42 @@
         hold-trigger-key-positions = <keys>; \
         __VA_ARGS__)
 
-ZMK_MACRO_ONE_PARAM(bt_sel,
-    bindings = <&macro_param_1to2 &bt BT_SEL MACRO_PLACEHOLDER>, <&out OUT_BLE>;)
-
-ZMK_MACRO_ONE_PARAM(bt_clr_sel,
-    bindings = <&macro_param_1to1 &bt_sel MACRO_PLACEHOLDER>, <&bt BT_CLR>;)
-
 ZMK_HOLD_TAP(space,
     flavor = SPACE_HOLDING_TYPE;
     tapping-term-ms = <SPACE_HOLDING_TIME>;
     quick-tap-ms = <SPACE_REPEAT_DECAY>;
     bindings = <&mo>, <&kp>;)
 
-ZMK_HOLD_TAP(ht_bt_profile,
-    flavor = "tap-preferred";
-    tapping-term-ms = <BT_CLEAR_HOLD_MS>;
-    bindings = <&bt_clr_sel>, <&bt_sel>;)
+/ {
+    behaviors {
+        bt_sel: bt_sel {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to2 &bt BT_SEL MACRO_PLACEHOLDER>, <&out OUT_BLE>;
+        };
+        bt_clr_sel: bt_clr_sel {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to1 &bt_sel MACRO_PLACEHOLDER>, <&bt BT_CLR>;
+        };
+        ht_bt_profile: ht_bt_profile {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <BT_CLEAR_HOLD_MS>;
+            bindings = <&bt_clr_sel>, <&bt_sel>;
+        };
+    };
+};
 
 HRM(lhp, PINKY_HOLDING_TIME, KEYS_R)
 HRM(lhr, RINGY_HOLDING_TIME, KEYS_R)
 HRM(lhm, MIDDY_HOLDING_TIME, KEYS_R)
 HRM(lhi, INDEX_HOLDING_TIME, KEYS_R)
 HRM(rhi, INDEX_HOLDING_TIME, KEYS_L)
+HRM(rhm, MIDDY_HOLDING_TIME, KEYS_L)
+HRM(rhr, RINGY_HOLDING_TIME, KEYS_L)
+HRM(rhp, PINKY_HOLDING_TIME, KEYS_L)
 
 #ifdef HRM_INSTANT_SHIFT
 &lhi { hold-while-undecided; };
@@ -97,9 +111,6 @@ HRM(rhi, INDEX_HOLDING_TIME, KEYS_L)
 &lhi { retro-tap; };
 &rhi { retro-tap; };
 #endif
-HRM(rhm, MIDDY_HOLDING_TIME, KEYS_L)
-HRM(rhr, RINGY_HOLDING_TIME, KEYS_L)
-HRM(rhp, PINKY_HOLDING_TIME, KEYS_L)
 
 /* Colemak Mod-DH customized by spikespaz
     |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  |  -  |
