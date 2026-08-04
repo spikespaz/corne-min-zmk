@@ -75,12 +75,10 @@
     require-prior-idle-ms = <HOMEY_STREAK_DECAY>; \
     hold-trigger-on-release
 
-#define HRM(name, ...) \
-    / { behaviors { name: name { HRM_CORE; __VA_ARGS__ }; }; };
 #define HRM_L(name, ...) \
-    HRM(name, bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>; __VA_ARGS__)
+    / { behaviors { name: name { HRM_CORE; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>; __VA_ARGS__ }; }; };
 #define HRM_R(name, ...) \
-    HRM(name, bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>; __VA_ARGS__)
+    / { behaviors { name: name { HRM_CORE; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>; __VA_ARGS__ }; }; };
 
 /* Conditional shift properties — each expands to its property or nothing,
  * keeping #ifdef out of DTS node bodies. */
