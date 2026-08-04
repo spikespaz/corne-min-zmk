@@ -16,14 +16,14 @@
 /* hold duration before BT profile clear fires (long to prevent accidental re-pair) */
 #define BT_CLEAR_HOLD_MS 1000
 
-/* SHIFT_INSTANT_MOD: shift registers the moment the key is held, before the
+/* HRM_INSTANT_SHIFT: shift registers the moment the key is held, before the
  * hold-tap resolves. Reversed automatically if it turns out to be a tap. */
-#define SHIFT_INSTANT_MOD
+#define HRM_INSTANT_SHIFT
 
-/* SHIFT_RECOVER_TAP: when a slow standalone hold expires past the tapping-term
+/* HRM_SHIFT_RECOVERY: when a slow standalone hold expires past the tapping-term
  * with nothing else pressed, types the tap character instead of silence.
- * Independently usable; pairs naturally with SHIFT_INSTANT_MOD. */
-// #define SHIFT_RECOVER_TAP
+ * Independently usable; pairs naturally with HRM_INSTANT_SHIFT. */
+// #define HRM_SHIFT_RECOVERY
 
 /* v0.3 hold-tap aliases: tap=param2, hold=param1 */
 #define bt_p(n) ht_bt_profile n n
@@ -52,19 +52,6 @@
 #define SPACE_HOLDING_TYPE    "tap-preferred"
 #define SPACE_HOLDING_TIME    THUMB_HOLDING_TIME
 #define SPACE_REPEAT_DECAY    TAPPING_RESOLUTION
-
-/* Conditional shift properties — each expands to its property or nothing,
- * keeping #ifdef out of DTS node bodies. */
-#ifdef SHIFT_INSTANT_MOD
-#define SHIFT_INSTANT_MOD_PROP  hold-while-undecided;
-#else
-#define SHIFT_INSTANT_MOD_PROP
-#endif
-#ifdef SHIFT_RECOVER_TAP
-#define SHIFT_RECOVER_TAP_PROP  retro-tap;
-#else
-#define SHIFT_RECOVER_TAP_PROP
-#endif
 
 /* Bilateral homerow mods built on ZMK_HOLD_TAP.
  * GACS outer→inner: pinky=GUI, ring=ALT, middle=CTL, index=SFT */
@@ -99,8 +86,17 @@ ZMK_HOLD_TAP(ht_bt_profile,
 HRM(lhp, PINKY_HOLDING_TIME, KEYS_R)
 HRM(lhr, RINGY_HOLDING_TIME, KEYS_R)
 HRM(lhm, MIDDY_HOLDING_TIME, KEYS_R)
-HRM(lhi, INDEX_HOLDING_TIME, KEYS_R, SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
-HRM(rhi, INDEX_HOLDING_TIME, KEYS_L, SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM(lhi, INDEX_HOLDING_TIME, KEYS_R)
+HRM(rhi, INDEX_HOLDING_TIME, KEYS_L)
+
+#ifdef HRM_INSTANT_SHIFT
+&lhi { hold-while-undecided; };
+&rhi { hold-while-undecided; };
+#endif
+#ifdef HRM_SHIFT_RECOVERY
+&lhi { retro-tap; };
+&rhi { retro-tap; };
+#endif
 HRM(rhm, MIDDY_HOLDING_TIME, KEYS_L)
 HRM(rhr, RINGY_HOLDING_TIME, KEYS_L)
 HRM(rhp, PINKY_HOLDING_TIME, KEYS_L)
