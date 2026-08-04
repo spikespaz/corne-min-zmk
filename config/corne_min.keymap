@@ -34,6 +34,9 @@
 #define HOMEY_STREAK_DECAY    TAPPING_RESOLUTION
 #define HOMEY_REPEAT_DECAY    (TAPPING_RESOLUTION + 150)
 
+#define THUMB_HOLDING_TIME    (TAPPING_RESOLUTION +  50)
+#define SPACE_REPEAT_DECAY    TAPPING_RESOLUTION
+
 /*
  * ZMK v0.3: zmk,behavior-hold-tap forces #binding-cells = <2> (const via
  * two_param.yaml) and bindings type is `phandles` — bare refs, no args.
@@ -70,6 +73,15 @@
     };
 
     behaviors {
+        space: thumb_spacebar {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <THUMB_HOLDING_TIME>;
+            quick-tap-ms = <SPACE_REPEAT_DECAY>;
+            bindings = <&mo>, <&kp>;
+        };
+
         ht_bt_profile: ht_bt_profile {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -105,7 +117,7 @@
     &kp TAB    &kp Q        &kp W        &kp F        &kp P        &kp B         &kp J    &kp L        &kp U        &kp Y        &kp SEMI     &kp MINUS
     &caps_word &lhp LGUI A  &lhr LALT R  &lhm LCTL S  &lhi LSFT T  &kp G         &kp M    &rhi RSFT N  &rhm RCTL E  &rhr RALT I  &rhp RGUI O  &kp SQT
     &kp GRAVE  &kp Z        &kp X        &kp C        &kp D        &kp V         &kp K    &kp H        &kp COMMA    &kp DOT      &kp FSLH     &kp BSLH
-    /*         |            |          */&kp LGUI     &mo 1        &kp SPACE     &kp RET  &mo 2        &kp RALT
+    /*         |            |          */&kp LGUI     &mo 1        &space 1 SPACE  &kp RET  &mo 2        &kp RALT
             >;
         };
 
