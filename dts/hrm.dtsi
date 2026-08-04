@@ -1,0 +1,27 @@
+/*
+ * Sunaku level-0 timings: TAPPING_RESOLUTION=150ms, offsets per finger:
+ *   index +30=180ms, middle +60=210ms, ring +90=240ms, pinky +120=270ms
+ * STREAK_DECAY (require-prior-idle-ms) = 150ms
+ * REPEAT_DECAY (quick-tap-ms)          = 300ms
+ */
+#define ZMK_HRM(name, triggers, tt, ...) \
+    / { behaviors { name: name { \
+        compatible = "zmk,behavior-hold-tap"; \
+        #binding-cells = <2>; \
+        bindings = <&kp>, <&kp>; \
+        flavor = "balanced"; \
+        quick-tap-ms = <300>; \
+        tapping-term-ms = <tt>; \
+        require-prior-idle-ms = <150>; \
+        hold-trigger-key-positions = <triggers>; \
+        hold-trigger-on-release; \
+        __VA_ARGS__ }; }; };
+
+ZMK_HRM(lhp, KEYS_R, 270)
+ZMK_HRM(lhr, KEYS_R, 240)
+ZMK_HRM(lhm, KEYS_R, 210)
+ZMK_HRM(lhi, KEYS_R, 180)
+ZMK_HRM(rhi, KEYS_L, 180)
+ZMK_HRM(rhm, KEYS_L, 210)
+ZMK_HRM(rhr, KEYS_L, 240)
+ZMK_HRM(rhp, KEYS_L, 270)

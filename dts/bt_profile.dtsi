@@ -1,0 +1,31 @@
+#ifndef BT_CLEAR_HOLD_MS
+#define BT_CLEAR_HOLD_MS  10000
+#endif
+
+#define bt_p(n) ht_bt_profile n n
+
+/ {
+    macros {
+        bt_sel: bt_sel {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to2 &bt BT_SEL MACRO_PLACEHOLDER>, <&out OUT_BLE>;
+        };
+
+        bt_clr_sel: bt_clr_sel {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&macro_param_1to1 &bt_sel MACRO_PLACEHOLDER>, <&bt BT_CLR>;
+        };
+    };
+
+    behaviors {
+        ht_bt_profile: ht_bt_profile {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <BT_CLEAR_HOLD_MS>;
+            flavor = "tap-preferred"; /* important */
+            bindings = <&bt_clr_sel>, <&bt_sel>;
+        };
+    };
+};
