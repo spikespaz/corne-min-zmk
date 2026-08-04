@@ -18,6 +18,10 @@ manifest:
     - name: prospector-module
       url: https://github.com/MechboardsLTD/zmk-module
       revision: prospector
+    - name: zmk-helpers
+      url: https://github.com/urob/zmk-helpers
+      path: modules/zmk/helpers
+      revision: 0b9e9d1dd9e86f70b4c8c2b0fab55c4f90c9d2e3
 
   self:
     path: config
