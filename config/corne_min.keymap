@@ -113,19 +113,21 @@
             >;
         };
 
-        raise_layer {
-            display-name = "Raise";
+        number_layer {
+            display-name = "Cursor & Numbers";
 /*
-    |  TAB |  !  |  @  |  #  |  $  |  %  |      |  ^  |  &  |  *  |  (  |  )  | BSPC |
-    | CTRL |     |     |     |     |     |      |  -  |  =  |  [  |  ]  |  \  |  `   |
-    | SHFT |     |     |     |     |     |      |  _  |  +  |  {  |  }  | "|" |  ~   |
-                       | GUI |     | SPC |      | ENT |     | ALT |
+    All GACS on this layer are sticky. Leave the layer to complete a combo.
+
+    |  TAB |  1  |  2  |  3  |  4  |  5  |      |  6  |  7  |  8  |  9  |  0  | INS  |
+    | CAPS |     |     |     |     |     |      |     | LFT |  UP | DWN | RGT | DEL  |
+    |      | LGUI| LALT| LCTL| LSFT|     |      |     | HOME| PGUP| PGDN| END | PSCRN|
+                       |     | ESC | SPC |      | BSPC| RET |     |
 */
             bindings = <
-    &kp  TAB       &kp EXCL &kp AT    &kp HASH  &kp DLLR  &kp PRCNT       &kp CARET   &kp AMPS   &kp ASTRK  &kp LPAR   &kp RPAR   &kp BSPC
-    &studio_unlock &trans   &trans    &trans    &trans    &trans          &kp MINUS   &kp EQUAL  &kp LBKT   &kp RBKT   &kp BSLH   &kp GRAVE
-    &kp LSHFT      &trans   &trans    &trans    &trans    &trans          &kp UNDER   &kp PLUS   &kp LBRC   &kp RBRC   &kp PIPE   &kp TILDE
-    /*             |        |       */&kp LGUI  &trans    &kp SPACE       &kp RET     &trans     &kp RALT
+    &kp TAB        &kp N1   &kp N2    &kp N3     &kp N4    &kp N5          &kp N6      &kp N7    &kp N8    &kp N9     &kp N0     &kp INS
+    &kp CAPS       &trans   &trans    &trans     &trans    &trans          &trans      &kp LEFT  &kp UP    &kp DOWN   &kp RIGHT  &kp DEL
+    &trans         &trans   &sk LGUI  &sk LALT   &sk LCTL  &sk LSFT        &trans      &kp HOME  &kp PGUP  &kp PGDN   &kp END    &kp PSCRN
+    /*             |        |       */&trans     &kp ESC   &kp SPACE       &kp BSPC    &kp RET   &trans
             >;
         };
 
