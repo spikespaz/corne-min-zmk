@@ -21,8 +21,7 @@
 
 /* SHIFT_RETRO_TAP: retro-tap on index HRMs — fires the tap character when a
  * slow standalone hold expires past the tapping-term without pressing anything.
- * Pairs naturally with SHIFT_FORGIVENESS to cover both the fast and slow cases,
- * but is independently useful if SHIFT_FORGIVENESS is disabled. */
+ * Independently usable; pairs naturally with SHIFT_FORGIVENESS. */
 // #define SHIFT_RETRO_TAP
 
 /* v0.3 hold-tap aliases: tap=param2, hold=param1 */
@@ -111,13 +110,15 @@
         HRM_L(lhr, homerow_left_ring,    RINGY_HOLDING_TIME)
         HRM_L(lhm, homerow_left_middle,  MIDDY_HOLDING_TIME)
 
-#ifdef SHIFT_FORGIVENESS
+#if defined(SHIFT_FORGIVENESS) || defined(SHIFT_RETRO_TAP)
         lhi: homerow_left_index {
             HRM_BASE
             tapping-term-ms = <INDEX_HOLDING_TIME>;
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <KEYS_R>;
+#ifdef SHIFT_FORGIVENESS
             hold-while-undecided;
+#endif
 #ifdef SHIFT_RETRO_TAP
             retro-tap;
 #endif
@@ -127,7 +128,9 @@
             tapping-term-ms = <INDEX_HOLDING_TIME>;
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <KEYS_L>;
+#ifdef SHIFT_FORGIVENESS
             hold-while-undecided;
+#endif
 #ifdef SHIFT_RETRO_TAP
             retro-tap;
 #endif
