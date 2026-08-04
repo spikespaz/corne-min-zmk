@@ -34,7 +34,12 @@
 #define HOMEY_STREAK_DECAY    TAPPING_RESOLUTION
 #define HOMEY_REPEAT_DECAY    (TAPPING_RESOLUTION + 150)
 
+#define THUMB_HOLDING_TYPE    "balanced"
 #define THUMB_HOLDING_TIME    (TAPPING_RESOLUTION +  50)
+#define THUMB_REPEAT_DECAY    (TAPPING_RESOLUTION + 150)
+
+#define SPACE_HOLDING_TYPE    "tap-preferred"
+#define SPACE_HOLDING_TIME    THUMB_HOLDING_TIME
 #define SPACE_REPEAT_DECAY    TAPPING_RESOLUTION
 
 /*
@@ -76,8 +81,8 @@
         space: thumb_spacebar {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
-            flavor = "balanced";
-            tapping-term-ms = <THUMB_HOLDING_TIME>;
+            flavor = SPACE_HOLDING_TYPE;
+            tapping-term-ms = <SPACE_HOLDING_TIME>;
             quick-tap-ms = <SPACE_REPEAT_DECAY>;
             bindings = <&mo>, <&kp>;
         };
