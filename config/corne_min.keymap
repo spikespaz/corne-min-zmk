@@ -68,7 +68,7 @@
 
 /* Bilateral homerow mods built on ZMK_HOLD_TAP.
  * GACS outer→inner: pinky=GUI, ring=ALT, middle=CTL, index=SFT */
-#define HRM_L(name, tt, ...) \
+#define HRM(name, tt, keys, ...) \
     ZMK_HOLD_TAP(name, \
         flavor = "tap-preferred"; \
         tapping-term-ms = <tt>; \
@@ -76,17 +76,7 @@
         require-prior-idle-ms = <HOMEY_STREAK_DECAY>; \
         hold-trigger-on-release; \
         bindings = <&kp>, <&kp>; \
-        hold-trigger-key-positions = <KEYS_R>; \
-        __VA_ARGS__)
-#define HRM_R(name, tt, ...) \
-    ZMK_HOLD_TAP(name, \
-        flavor = "tap-preferred"; \
-        tapping-term-ms = <tt>; \
-        quick-tap-ms = <HOMEY_REPEAT_DECAY>; \
-        require-prior-idle-ms = <HOMEY_STREAK_DECAY>; \
-        hold-trigger-on-release; \
-        bindings = <&kp>, <&kp>; \
-        hold-trigger-key-positions = <KEYS_L>; \
+        hold-trigger-key-positions = <keys>; \
         __VA_ARGS__)
 
 ZMK_MACRO_ONE_PARAM(bt_sel,
@@ -106,14 +96,14 @@ ZMK_HOLD_TAP(ht_bt_profile,
     tapping-term-ms = <BT_CLEAR_HOLD_MS>;
     bindings = <&bt_clr_sel>, <&bt_sel>;)
 
-HRM_L(lhp, PINKY_HOLDING_TIME)
-HRM_L(lhr, RINGY_HOLDING_TIME)
-HRM_L(lhm, MIDDY_HOLDING_TIME)
-HRM_L(lhi, INDEX_HOLDING_TIME, SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
-HRM_R(rhi, INDEX_HOLDING_TIME, SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
-HRM_R(rhm, MIDDY_HOLDING_TIME)
-HRM_R(rhr, RINGY_HOLDING_TIME)
-HRM_R(rhp, PINKY_HOLDING_TIME)
+HRM(lhp, PINKY_HOLDING_TIME, KEYS_R)
+HRM(lhr, RINGY_HOLDING_TIME, KEYS_R)
+HRM(lhm, MIDDY_HOLDING_TIME, KEYS_R)
+HRM(lhi, INDEX_HOLDING_TIME, KEYS_R, SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM(rhi, INDEX_HOLDING_TIME, KEYS_L, SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM(rhm, MIDDY_HOLDING_TIME, KEYS_L)
+HRM(rhr, RINGY_HOLDING_TIME, KEYS_L)
+HRM(rhp, PINKY_HOLDING_TIME, KEYS_L)
 
 /* Colemak Mod-DH customized by spikespaz
     |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  |  -  |
@@ -121,10 +111,10 @@ HRM_R(rhp, PINKY_HOLDING_TIME)
     |   `  |  Z  |  X  |  C  |  D  |  V  |      |  K  |  H   |  ,  |  .  |  /  |  \  |
                        | GUI | LWR | SPC |      | ENT | RSE  | ALT |  */
 ZMK_LAYER(Colemak_DH,
-    &kp TAB    &kp Q        &kp W        &kp F        &kp P        &kp B         &kp J    &kp L        &kp U        &kp Y        &kp SEMI     &kp MINUS
-    &caps_word &lhp LGUI A  &lhr LALT R  &lhm LCTL S  &lhi LSFT T  &kp G         &kp M    &rhi RSFT N  &rhm RCTL E  &rhr RALT I  &rhp RGUI O  &kp SQT
-    &kp GRAVE  &kp Z        &kp X        &kp C        &kp D        &kp V         &kp K    &kp H        &kp COMMA    &kp DOT      &kp FSLH     &kp BSLH
-               &kp LGUI     &mo 1        &space 1 SPACE  &kp RET  &mo 2          &kp RALT
+    &kp TAB    &kp Q        &kp W        &kp F               &kp P        &kp B         &kp J    &kp L        &kp U        &kp Y        &kp SEMI     &kp MINUS
+    &caps_word &lhp LGUI A  &lhr LALT R  &lhm LCTL S         &lhi LSFT T  &kp G         &kp M    &rhi RSFT N  &rhm RCTL E  &rhr RALT I  &rhp RGUI O  &kp SQT
+    &kp GRAVE  &kp Z        &kp X        &kp C               &kp D        &kp V         &kp K    &kp H        &kp COMMA    &kp DOT      &kp FSLH     &kp BSLH
+               &kp LGUI     &mo 1        &space 1 SPACE      &kp RET      &mo 2         &kp RALT
 )
 
 /* |  TAB   |  1  |  2  |  3  |  4  |  5  |      |  6  |  7  |  8  |  9  |  0  | BSPC |
