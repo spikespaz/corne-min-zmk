@@ -14,15 +14,14 @@
 /* hold duration before BT profile clear fires (long to prevent accidental re-pair) */
 #define BT_CLEAR_HOLD_MS 1000
 
-/* SHIFT_FORGIVENESS: hold-while-undecided on index HRMs for instant shift feel.
- * Provisionally registers shift the moment the key is held; reverses it if
- * resolved as a tap. */
-#define SHIFT_FORGIVENESS
+/* SHIFT_INSTANT_MOD: shift registers the moment the key is held, before the
+ * hold-tap resolves. Reversed automatically if it turns out to be a tap. */
+#define SHIFT_INSTANT_MOD
 
-/* SHIFT_RETRO_TAP: retro-tap on index HRMs — fires the tap character when a
- * slow standalone hold expires past the tapping-term without pressing anything.
- * Independently usable; pairs naturally with SHIFT_FORGIVENESS. */
-// #define SHIFT_RETRO_TAP
+/* SHIFT_RECOVER_TAP: when a slow standalone hold expires past the tapping-term
+ * with nothing else pressed, types the tap character instead of silence.
+ * Independently usable; pairs naturally with SHIFT_INSTANT_MOD. */
+// #define SHIFT_RECOVER_TAP
 
 /* v0.3 hold-tap aliases: tap=param2, hold=param1 */
 #define bt_p(n) ht_bt_profile n n
@@ -110,16 +109,16 @@
         HRM_L(lhr, homerow_left_ring,    RINGY_HOLDING_TIME)
         HRM_L(lhm, homerow_left_middle,  MIDDY_HOLDING_TIME)
 
-#if defined(SHIFT_FORGIVENESS) || defined(SHIFT_RETRO_TAP)
+#if defined(SHIFT_INSTANT_MOD) || defined(SHIFT_RECOVER_TAP)
         lhi: homerow_left_index {
             HRM_BASE
             tapping-term-ms = <INDEX_HOLDING_TIME>;
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <KEYS_R>;
-#ifdef SHIFT_FORGIVENESS
+#ifdef SHIFT_INSTANT_MOD
             hold-while-undecided;
 #endif
-#ifdef SHIFT_RETRO_TAP
+#ifdef SHIFT_RECOVER_TAP
             retro-tap;
 #endif
         };
@@ -128,10 +127,10 @@
             tapping-term-ms = <INDEX_HOLDING_TIME>;
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <KEYS_L>;
-#ifdef SHIFT_FORGIVENESS
+#ifdef SHIFT_INSTANT_MOD
             hold-while-undecided;
 #endif
-#ifdef SHIFT_RETRO_TAP
+#ifdef SHIFT_RECOVER_TAP
             retro-tap;
 #endif
         };
