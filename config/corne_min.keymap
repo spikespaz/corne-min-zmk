@@ -51,19 +51,6 @@
 #define SPACE_HOLDING_TIME    THUMB_HOLDING_TIME
 #define SPACE_REPEAT_DECAY    TAPPING_RESOLUTION
 
-/*
- * ZMK v0.3: zmk,behavior-hold-tap forces #binding-cells = <2> (const via
- * two_param.yaml) and bindings type is `phandles` — bare refs, no args.
- * The mod is therefore supplied at the keymap call site: &lhp LGUI A.
- */
-#define HRM_BASE \
-    compatible = "zmk,behavior-hold-tap"; \
-    #binding-cells = <2>; \
-    flavor = "tap-preferred"; \
-    quick-tap-ms = <HOMEY_REPEAT_DECAY>; \
-    require-prior-idle-ms = <HOMEY_STREAK_DECAY>; \
-    hold-trigger-on-release;
-
 /* standard 42-key Corne positions (index = order in keymap bindings) */
 #define KEYS_L  0  1  2  3  4  5  12 13 14 15 16 17  24 25 26 27 28 29
 #define KEYS_R  6  7  8  9 10 11  18 19 20 21 22 23  30 31 32 33 34 35
@@ -71,8 +58,38 @@
 #define THUMBS_R  39 40 41
 #define THUMBS    THUMBS_L THUMBS_R
 
-#define HRM_L(label, name, tt) label: name { HRM_BASE tapping-term-ms = <tt>; bindings = <&kp &kp>; hold-trigger-key-positions = <KEYS_R>; };
-#define HRM_R(label, name, tt) label: name { HRM_BASE tapping-term-ms = <tt>; bindings = <&kp &kp>; hold-trigger-key-positions = <KEYS_L>; };
+/*
+ * HRM_CORE is object-like so #binding-cells is never inside a variadic body
+ * (where # would be the stringification operator). HRM(name, ...) emits a
+ * self-contained / { behaviors { }; }; DTS overlay fragment per behavior;
+ * the DTS compiler merges all such fragments at build time.
+ *
+ * v0.3: bindings is `phandles` — bare behavior refs, no args at definition.
+ * The modifier and key are supplied at the call site: &lhp LGUI A.
+ */
+#define HRM_CORE \
+    compatible = "zmk,behavior-hold-tap"; \
+    #binding-cells = <2>; \
+    flavor = "tap-preferred"; \
+    quick-tap-ms = <HOMEY_REPEAT_DECAY>; \
+    require-prior-idle-ms = <HOMEY_STREAK_DECAY>; \
+    hold-trigger-on-release
+
+#define HRM(name, ...) \
+    / { behaviors { name: name { HRM_CORE; __VA_ARGS__ }; }; };
+
+/* Conditional shift properties — each expands to its property or nothing,
+ * keeping #ifdef out of DTS node bodies. */
+#ifdef SHIFT_INSTANT_MOD
+#define SHIFT_INSTANT_MOD_PROP  hold-while-undecided;
+#else
+#define SHIFT_INSTANT_MOD_PROP
+#endif
+#ifdef SHIFT_RECOVER_TAP
+#define SHIFT_RECOVER_TAP_PROP  retro-tap;
+#else
+#define SHIFT_RECOVER_TAP_PROP
+#endif
 
 / {
     macros {
@@ -87,64 +104,6 @@
             #binding-cells = <1>;
             bindings = <&macro_param_1to1 &bt_sel MACRO_PLACEHOLDER>, <&bt BT_CLR>;
         };
-    };
-
-    behaviors {
-        space: thumb_spacebar {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            flavor = SPACE_HOLDING_TYPE;
-            tapping-term-ms = <SPACE_HOLDING_TIME>;
-            quick-tap-ms = <SPACE_REPEAT_DECAY>;
-            bindings = <&mo>, <&kp>;
-        };
-
-        ht_bt_profile: ht_bt_profile {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            tapping-term-ms = <BT_CLEAR_HOLD_MS>;
-            flavor = "tap-preferred"; /* important */
-            bindings = <&bt_clr_sel>, <&bt_sel>;
-        };
-
-        /* GACS outer→inner: pinky=GUI, ring=ALT, middle=CTL, index=SFT */
-        HRM_L(lhp, homerow_left_pinky,   PINKY_HOLDING_TIME)
-        HRM_L(lhr, homerow_left_ring,    RINGY_HOLDING_TIME)
-        HRM_L(lhm, homerow_left_middle,  MIDDY_HOLDING_TIME)
-
-#if defined(SHIFT_INSTANT_MOD) || defined(SHIFT_RECOVER_TAP)
-        lhi: homerow_left_index {
-            HRM_BASE
-            tapping-term-ms = <INDEX_HOLDING_TIME>;
-            bindings = <&kp>, <&kp>;
-            hold-trigger-key-positions = <KEYS_R>;
-#ifdef SHIFT_INSTANT_MOD
-            hold-while-undecided;
-#endif
-#ifdef SHIFT_RECOVER_TAP
-            retro-tap;
-#endif
-        };
-        rhi: homerow_right_index {
-            HRM_BASE
-            tapping-term-ms = <INDEX_HOLDING_TIME>;
-            bindings = <&kp>, <&kp>;
-            hold-trigger-key-positions = <KEYS_L>;
-#ifdef SHIFT_INSTANT_MOD
-            hold-while-undecided;
-#endif
-#ifdef SHIFT_RECOVER_TAP
-            retro-tap;
-#endif
-        };
-#else
-        HRM_L(lhi, homerow_left_index,   INDEX_HOLDING_TIME)
-        HRM_R(rhi, homerow_right_index,  INDEX_HOLDING_TIME)
-#endif
-
-        HRM_R(rhm, homerow_right_middle, MIDDY_HOLDING_TIME)
-        HRM_R(rhr, homerow_right_ring,   RINGY_HOLDING_TIME)
-        HRM_R(rhp, homerow_right_pinky,  PINKY_HOLDING_TIME)
     };
 
     keymap {
@@ -215,3 +174,34 @@
         };
     };
 };
+
+/ {
+    behaviors {
+        space: thumb_spacebar {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = SPACE_HOLDING_TYPE;
+            tapping-term-ms = <SPACE_HOLDING_TIME>;
+            quick-tap-ms = <SPACE_REPEAT_DECAY>;
+            bindings = <&mo>, <&kp>;
+        };
+
+        ht_bt_profile: ht_bt_profile {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <BT_CLEAR_HOLD_MS>;
+            flavor = "tap-preferred";
+            bindings = <&bt_clr_sel>, <&bt_sel>;
+        };
+    };
+};
+
+/* GACS homerow mods, outer→inner: pinky=GUI, ring=ALT, middle=CTL, index=SFT */
+HRM(lhp, tapping-term-ms = <PINKY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>;)
+HRM(lhr, tapping-term-ms = <RINGY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>;)
+HRM(lhm, tapping-term-ms = <MIDDY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>;)
+HRM(lhi, tapping-term-ms = <INDEX_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_R>; SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM(rhi, tapping-term-ms = <INDEX_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>; SHIFT_INSTANT_MOD_PROP SHIFT_RECOVER_TAP_PROP)
+HRM(rhm, tapping-term-ms = <MIDDY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>;)
+HRM(rhr, tapping-term-ms = <RINGY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>;)
+HRM(rhp, tapping-term-ms = <PINKY_HOLDING_TIME>; bindings = <&kp>, <&kp>; hold-trigger-key-positions = <KEYS_L>;)
