@@ -115,72 +115,36 @@ HRM_R(rhm, MIDDY_HOLDING_TIME)
 HRM_R(rhr, RINGY_HOLDING_TIME)
 HRM_R(rhp, PINKY_HOLDING_TIME)
 
-/ {
-    keymap {
-        compatible = "zmk,keymap";
-
-        default_layer {
-            display-name = "Colemak-DH";
-/*
-    Colemak Mod-DH customized by spikespaz
+/* Colemak Mod-DH customized by spikespaz
     |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  |  -  |
     | CAPSW|  A  |  R  |  S  |  T  |  G  |      |  M  |  N   |  E  |  I  |  O  |  '  |
     |   `  |  Z  |  X  |  C  |  D  |  V  |      |  K  |  H   |  ,  |  .  |  /  |  \  |
-                       | GUI | LWR | SPC |      | ENT | RSE  | ALT |
-*/
-            bindings = <
+                       | GUI | LWR | SPC |      | ENT | RSE  | ALT |  */
+ZMK_LAYER(Colemak_DH,
     &kp TAB    &kp Q        &kp W        &kp F        &kp P        &kp B         &kp J    &kp L        &kp U        &kp Y        &kp SEMI     &kp MINUS
     &caps_word &lhp LGUI A  &lhr LALT R  &lhm LCTL S  &lhi LSFT T  &kp G         &kp M    &rhi RSFT N  &rhm RCTL E  &rhr RALT I  &rhp RGUI O  &kp SQT
     &kp GRAVE  &kp Z        &kp X        &kp C        &kp D        &kp V         &kp K    &kp H        &kp COMMA    &kp DOT      &kp FSLH     &kp BSLH
-    /*         |            |          */&kp LGUI     &mo 1        &space 1 SPACE  &kp RET  &mo 2        &kp RALT
-            >;
-        };
+               &kp LGUI     &mo 1        &space 1 SPACE  &kp RET  &mo 2          &kp RALT
+)
 
-        lower_layer {
-            display-name = "Lower";
-/*
-    |  TAB   |  1  |  2  |  3  |  4  |  5  |      |  6  |  7  |  8  |  9  |  0  | BSPC |
-    | OUT_USB| BT1 | BT2 | BT3 | BT4 | BT5 |      | LFT | DWN |  UP | RGT |     |      |
-    | SHFT   |     |     |     |     |     |      |     |     |     |     |     |      |
-                         | GUI |     | SPC |      | ENT |     | ALT |
-*/
-            bindings = <
-    &kp TAB       &kp N1       &kp N2       &kp N3       &kp N4       &kp N5            &kp N6      &kp N7      &kp N8    &kp N9       &kp N0    &kp BSPC
-    &out OUT_USB  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &kp LEFT    &kp DOWN    &kp UP    &kp RIGHT    &trans    &trans
-    &kp LSHFT     &trans       &trans       &trans       &trans       &trans            &trans      &trans      &trans    &trans       &trans    &trans
-    /*            |            |          */&kp LGUI     &trans       &kp SPACE         &kp RET     &trans      &kp RALT
-            >;
-        };
+/* |  TAB   |  1  |  2  |  3  |  4  |  5  |      |  6  |  7  |  8  |  9  |  0  | BSPC |
+   | OUT_USB| BT1 | BT2 | BT3 | BT4 | BT5 |      | LFT | DWN |  UP | RGT |     |      |
+   | SHFT   |     |     |     |     |     |      |     |     |     |     |     |      |
+                         | GUI |     | SPC |      | ENT |     | ALT |  */
+ZMK_LAYER(Lower,
+    &kp TAB       &kp N1   &kp N2   &kp N3   &kp N4   &kp N5      &kp N6    &kp N7    &kp N8  &kp N9     &kp N0  &kp BSPC
+    &out OUT_USB  &bt_p(0) &bt_p(1) &bt_p(2) &bt_p(3) &bt_p(4)    &kp LEFT  &kp DOWN  &kp UP  &kp RIGHT  &trans  &trans
+    &kp LSHFT     &trans   &trans   &trans   &trans   &trans       &trans    &trans    &trans  &trans     &trans  &trans
+                           &kp LGUI &trans   &kp SPACE             &kp RET   &trans    &kp RALT
+)
 
-        raise_layer {
-            display-name = "Raise";
-/*
-    |  TAB |  !  |  @  |  #  |  $  |  %  |      |  ^  |  &  |  *  |  (  |  )  | BSPC |
-    | CTRL |     |     |     |     |     |      |  -  |  =  |  [  |  ]  |  \  |  `   |
-    | SHFT |     |     |     |     |     |      |  _  |  +  |  {  |  }  | "|" |  ~   |
-                       | GUI |     | SPC |      | ENT |     | ALT |
-*/
-            bindings = <
-    &kp  TAB       &kp EXCL &kp AT    &kp HASH  &kp DLLR  &kp PRCNT       &kp CARET   &kp AMPS   &kp ASTRK  &kp LPAR   &kp RPAR   &kp BSPC
-    &studio_unlock &trans   &trans    &trans    &trans    &trans          &kp MINUS   &kp EQUAL  &kp LBKT   &kp RBKT   &kp BSLH   &kp GRAVE
-    &kp LSHFT      &trans   &trans    &trans    &trans    &trans          &kp UNDER   &kp PLUS   &kp LBRC   &kp RBRC   &kp PIPE   &kp TILDE
-    /*             |        |       */&kp LGUI  &trans    &kp SPACE       &kp RET     &trans     &kp RALT
-            >;
-        };
-
-        extra1 {
-            display-name = "Extra-1";
-            status = "reserved";
-        };
-
-        extra2 {
-            display-name = "Extra-2";
-            status = "reserved";
-        };
-
-        extra3 {
-            display-name = "Extra-3";
-            status = "reserved";
-        };
-    };
-};
+/* |  TAB |  !  |  @  |  #  |  $  |  %  |      |  ^  |  &  |  *  |  (  |  )  | BSPC |
+   | CTRL |     |     |     |     |     |      |  -  |  =  |  [  |  ]  |  \  |  `   |
+   | SHFT |     |     |     |     |     |      |  _  |  +  |  {  |  }  | "|" |  ~   |
+                       | GUI |     | SPC |      | ENT |     | ALT |  */
+ZMK_LAYER(Raise,
+    &kp TAB        &kp EXCL  &kp AT  &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTRK  &kp LPAR  &kp RPAR  &kp BSPC
+    &studio_unlock &trans    &trans  &trans    &trans    &trans        &kp MINUS  &kp EQUAL  &kp LBKT   &kp RBKT  &kp BSLH  &kp GRAVE
+    &kp LSHFT      &trans    &trans  &trans    &trans    &trans        &kp UNDER  &kp PLUS   &kp LBRC   &kp RBRC  &kp PIPE  &kp TILDE
+                             &kp LGUI &trans   &kp SPACE              &kp RET    &trans     &kp RALT
+)
