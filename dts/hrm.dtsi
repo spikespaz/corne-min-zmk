@@ -1,27 +1,61 @@
-/*
- * Sunaku level-0 timings: TAPPING_RESOLUTION=150ms, offsets per finger:
- *   index +30=180ms, middle +60=210ms, ring +90=240ms, pinky +120=270ms
- * STREAK_DECAY (require-prior-idle-ms) = 150ms
- * REPEAT_DECAY (quick-tap-ms)          = 300ms
+/* Maximum milliseconds between releasing one key and pressing the next, at your natural
+ * typing cadence. Keystrokes arriving within this interval perpetuate a typing streak that
+ * suppresses hold behaviors; a key arriving after it becomes eligible to trigger one.
  */
-#define ZMK_HRM(name, triggers, tt, ...) \
+#ifndef TYPING_CADENCE
+#define TYPING_CADENCE    150
+#endif
+
+/* How long a typing streak persists after the last key — home-row presses within this
+ * interval are considered taps. Equal to TYPING_CADENCE: one keystroke's worth of idle
+ * time is enough to clear it.
+ */
+#ifndef TYPING_STREAK_GRACE
+#define TYPING_STREAK_GRACE    TYPING_CADENCE
+#endif
+
+/* Extra hold duration beyond TYPING_CADENCE before each finger's modifier fires.
+ * Outer fingers use higher values to reduce accidental holds from imprecise presses.
+ */
+#ifndef HOME_PINKY_HOLD_LAG
+#define HOME_PINKY_HOLD_LAG    120
+#endif
+#ifndef HOME_RINGY_HOLD_LAG
+#define HOME_RINGY_HOLD_LAG     90
+#endif
+#ifndef HOME_MIDDY_HOLD_LAG
+#define HOME_MIDDY_HOLD_LAG     60
+#endif
+#ifndef HOME_INDEX_HOLD_LAG
+#define HOME_INDEX_HOLD_LAG     30
+#endif
+
+/* Extend the grace period beyond TYPING_CADENCE after a tap, during which releasing
+ * and then holding the same key again produces repeat events rather than the modifier.
+ */
+#ifndef HOME_KEY_REPEAT_GRACE
+#define HOME_KEY_REPEAT_GRACE    150
+#endif
+
+
+#define ZMK_HRM(name, triggers, lag, ...) \
     / { behaviors { name: name { \
         compatible = "zmk,behavior-hold-tap"; \
         #binding-cells = <2>; \
         bindings = <&kp>, <&kp>; \
         flavor = "balanced"; \
-        quick-tap-ms = <300>; \
-        tapping-term-ms = <tt>; \
-        require-prior-idle-ms = <150>; \
+        quick-tap-ms = <(TYPING_CADENCE + HOME_KEY_REPEAT_GRACE)>; \
+        tapping-term-ms = <(TYPING_CADENCE + lag)>; \
+        require-prior-idle-ms = <TYPING_STREAK_GRACE>; \
         hold-trigger-key-positions = <triggers>; \
         hold-trigger-on-release; \
         __VA_ARGS__ }; }; };
 
-ZMK_HRM(lhp, KEYS_R, 270)
-ZMK_HRM(lhr, KEYS_R, 240)
-ZMK_HRM(lhm, KEYS_R, 210)
-ZMK_HRM(lhi, KEYS_R, 180)
-ZMK_HRM(rhi, KEYS_L, 180)
-ZMK_HRM(rhm, KEYS_L, 210)
-ZMK_HRM(rhr, KEYS_L, 240)
-ZMK_HRM(rhp, KEYS_L, 270)
+ZMK_HRM(lhp, KEYS_R, HOME_PINKY_HOLD_LAG)
+ZMK_HRM(lhr, KEYS_R, HOME_RINGY_HOLD_LAG)
+ZMK_HRM(lhm, KEYS_R, HOME_MIDDY_HOLD_LAG)
+ZMK_HRM(lhi, KEYS_R, HOME_INDEX_HOLD_LAG)
+ZMK_HRM(rhi, KEYS_L, HOME_INDEX_HOLD_LAG)
+ZMK_HRM(rhm, KEYS_L, HOME_MIDDY_HOLD_LAG)
+ZMK_HRM(rhr, KEYS_L, HOME_RINGY_HOLD_LAG)
+ZMK_HRM(rhp, KEYS_L, HOME_PINKY_HOLD_LAG)
