@@ -30,6 +30,22 @@
 #define HOME_INDEX_HOLD_LAG     30
 #endif
 
+/* By how many milliseconds per-finger to shorten TYPING_STREAK_GRACE, causing
+ * its hold action to become eligible before the typing streak has timed out.
+ */
+#ifndef HOME_PINKY_HOLD_LEAD
+#define HOME_PINKY_HOLD_LEAD     0
+#endif
+#ifndef HOME_RINGY_HOLD_LEAD
+#define HOME_RINGY_HOLD_LEAD     0
+#endif
+#ifndef HOME_MIDDY_HOLD_LEAD
+#define HOME_MIDDY_HOLD_LEAD     0
+#endif
+#ifndef HOME_INDEX_HOLD_LEAD
+#define HOME_INDEX_HOLD_LEAD    80
+#endif
+
 /* Extend the grace period beyond TYPING_CADENCE after a tap, during which releasing
  * and then holding the same key again produces repeat events rather than the modifier.
  */
@@ -38,7 +54,7 @@
 #endif
 
 
-#define ZMK_HRM(name, triggers, lag, ...) \
+#define ZMK_HRM(name, triggers, lag, lead, ...) \
     / { behaviors { name: name { \
         compatible = "zmk,behavior-hold-tap"; \
         #binding-cells = <2>; \
@@ -46,16 +62,16 @@
         flavor = "balanced"; \
         quick-tap-ms = <(TYPING_CADENCE + HOME_KEY_REPEAT_GRACE)>; \
         tapping-term-ms = <(TYPING_CADENCE + lag)>; \
-        require-prior-idle-ms = <TYPING_STREAK_GRACE>; \
+        require-prior-idle-ms = <(TYPING_STREAK_GRACE - lead)>; \
         hold-trigger-key-positions = <triggers>; \
         hold-trigger-on-release; \
         __VA_ARGS__ }; }; };
 
-ZMK_HRM(lhp, KEYS_R, HOME_PINKY_HOLD_LAG)
-ZMK_HRM(lhr, KEYS_R, HOME_RINGY_HOLD_LAG)
-ZMK_HRM(lhm, KEYS_R, HOME_MIDDY_HOLD_LAG)
-ZMK_HRM(lhi, KEYS_R, HOME_INDEX_HOLD_LAG)
-ZMK_HRM(rhi, KEYS_L, HOME_INDEX_HOLD_LAG)
-ZMK_HRM(rhm, KEYS_L, HOME_MIDDY_HOLD_LAG)
-ZMK_HRM(rhr, KEYS_L, HOME_RINGY_HOLD_LAG)
-ZMK_HRM(rhp, KEYS_L, HOME_PINKY_HOLD_LAG)
+ZMK_HRM(lhp, KEYS_R, HOME_PINKY_HOLD_LAG, HOME_PINKY_HOLD_LEAD)
+ZMK_HRM(lhr, KEYS_R, HOME_RINGY_HOLD_LAG, HOME_RINGY_HOLD_LEAD)
+ZMK_HRM(lhm, KEYS_R, HOME_MIDDY_HOLD_LAG, HOME_MIDDY_HOLD_LEAD)
+ZMK_HRM(lhi, KEYS_R, HOME_INDEX_HOLD_LAG, HOME_INDEX_HOLD_LEAD)
+ZMK_HRM(rhi, KEYS_L, HOME_INDEX_HOLD_LAG, HOME_INDEX_HOLD_LEAD)
+ZMK_HRM(rhm, KEYS_L, HOME_MIDDY_HOLD_LAG, HOME_MIDDY_HOLD_LEAD)
+ZMK_HRM(rhr, KEYS_L, HOME_RINGY_HOLD_LAG, HOME_RINGY_HOLD_LEAD)
+ZMK_HRM(rhp, KEYS_L, HOME_PINKY_HOLD_LAG, HOME_PINKY_HOLD_LEAD)
