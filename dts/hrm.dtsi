@@ -46,6 +46,23 @@
 #define HOME_INDEX_HOLD_LEAD    80
 #endif
 
+/* How readily each finger commits to its modifier when held. "tap-preferred" requires
+ * holding that long regardless; "balanced" also fires the moment another key is pressed
+ * and released while held, without needing to reach that duration.
+ */
+#ifndef HOME_PINKY_HOLD_KIND
+#define HOME_PINKY_HOLD_KIND    "tap-preferred"
+#endif
+#ifndef HOME_RINGY_HOLD_KIND
+#define HOME_RINGY_HOLD_KIND    "tap-preferred"
+#endif
+#ifndef HOME_MIDDY_HOLD_KIND
+#define HOME_MIDDY_HOLD_KIND    "tap-preferred"
+#endif
+#ifndef HOME_INDEX_HOLD_KIND
+#define HOME_INDEX_HOLD_KIND    "tap-preferred"
+#endif
+
 /* Extend the grace period beyond TYPING_CADENCE after a tap, during which releasing
  * and then holding the same key again produces repeat events rather than the modifier.
  */
@@ -54,12 +71,12 @@
 #endif
 
 
-#define ZMK_HRM(name, triggers, lag, lead, ...) \
+#define ZMK_HRM(name, triggers, kind, lag, lead, ...) \
     / { behaviors { name: name { \
         compatible = "zmk,behavior-hold-tap"; \
         #binding-cells = <2>; \
         bindings = <&kp>, <&kp>; \
-        flavor = "balanced"; \
+        flavor = kind; \
         quick-tap-ms = <(TYPING_CADENCE + HOME_KEY_REPEAT_GRACE)>; \
         tapping-term-ms = <(TYPING_CADENCE + lag)>; \
         require-prior-idle-ms = <(TYPING_STREAK_GRACE - lead)>; \
@@ -67,11 +84,11 @@
         hold-trigger-on-release; \
         __VA_ARGS__ }; }; };
 
-ZMK_HRM(lhp, KEYS_R, HOME_PINKY_HOLD_LAG, HOME_PINKY_HOLD_LEAD)
-ZMK_HRM(lhr, KEYS_R, HOME_RINGY_HOLD_LAG, HOME_RINGY_HOLD_LEAD)
-ZMK_HRM(lhm, KEYS_R, HOME_MIDDY_HOLD_LAG, HOME_MIDDY_HOLD_LEAD)
-ZMK_HRM(lhi, KEYS_R, HOME_INDEX_HOLD_LAG, HOME_INDEX_HOLD_LEAD)
-ZMK_HRM(rhi, KEYS_L, HOME_INDEX_HOLD_LAG, HOME_INDEX_HOLD_LEAD)
-ZMK_HRM(rhm, KEYS_L, HOME_MIDDY_HOLD_LAG, HOME_MIDDY_HOLD_LEAD)
-ZMK_HRM(rhr, KEYS_L, HOME_RINGY_HOLD_LAG, HOME_RINGY_HOLD_LEAD)
-ZMK_HRM(rhp, KEYS_L, HOME_PINKY_HOLD_LAG, HOME_PINKY_HOLD_LEAD)
+ZMK_HRM(lhp, KEYS_R, HOME_PINKY_HOLD_KIND, HOME_PINKY_HOLD_LAG, HOME_PINKY_HOLD_LEAD)
+ZMK_HRM(lhr, KEYS_R, HOME_RINGY_HOLD_KIND, HOME_RINGY_HOLD_LAG, HOME_RINGY_HOLD_LEAD)
+ZMK_HRM(lhm, KEYS_R, HOME_MIDDY_HOLD_KIND, HOME_MIDDY_HOLD_LAG, HOME_MIDDY_HOLD_LEAD)
+ZMK_HRM(lhi, KEYS_R, HOME_INDEX_HOLD_KIND, HOME_INDEX_HOLD_LAG, HOME_INDEX_HOLD_LEAD)
+ZMK_HRM(rhi, KEYS_L, HOME_INDEX_HOLD_KIND, HOME_INDEX_HOLD_LAG, HOME_INDEX_HOLD_LEAD)
+ZMK_HRM(rhm, KEYS_L, HOME_MIDDY_HOLD_KIND, HOME_MIDDY_HOLD_LAG, HOME_MIDDY_HOLD_LEAD)
+ZMK_HRM(rhr, KEYS_L, HOME_RINGY_HOLD_KIND, HOME_RINGY_HOLD_LAG, HOME_RINGY_HOLD_LEAD)
+ZMK_HRM(rhp, KEYS_L, HOME_PINKY_HOLD_KIND, HOME_PINKY_HOLD_LAG, HOME_PINKY_HOLD_LEAD)
