@@ -79,27 +79,27 @@
 #endif
 
 
-#define ZMK_HRM(name, triggers, kind, lag, lead, ...) \
+#define ZMK_HRM(name, finger, triggers, ...) \
     / { behaviors { name: name { \
         compatible = "zmk,behavior-hold-tap"; \
         #binding-cells = <2>; \
         bindings = <&kp>, <&kp>; \
-        flavor = kind; \
+        flavor = HOME_##finger##_HOLD_KIND; \
         quick-tap-ms = <(TYPING_CADENCE + HOME_KEY_REPEAT_GRACE)>; \
-        tapping-term-ms = <(TYPING_CADENCE + lag)>; \
-        require-prior-idle-ms = <(TYPING_STREAK_GRACE - lead)>; \
+        tapping-term-ms = <(TYPING_CADENCE + HOME_##finger##_HOLD_LAG)>; \
+        require-prior-idle-ms = <(TYPING_STREAK_GRACE - HOME_##finger##_HOLD_LEAD)>; \
         hold-trigger-key-positions = <triggers>; \
         hold-trigger-on-release; \
         __VA_ARGS__ }; }; };
 
-ZMK_HRM(lhp, KEYS_R, HOME_PINKY_HOLD_KIND, HOME_PINKY_HOLD_LAG, HOME_PINKY_HOLD_LEAD)
-ZMK_HRM(lhr, KEYS_R, HOME_RINGY_HOLD_KIND, HOME_RINGY_HOLD_LAG, HOME_RINGY_HOLD_LEAD)
-ZMK_HRM(lhm, KEYS_R, HOME_MIDDY_HOLD_KIND, HOME_MIDDY_HOLD_LAG, HOME_MIDDY_HOLD_LEAD)
-ZMK_HRM(lhi, KEYS_R, HOME_INDEX_HOLD_KIND, HOME_INDEX_HOLD_LAG, HOME_INDEX_HOLD_LEAD)
-ZMK_HRM(rhi, KEYS_L, HOME_INDEX_HOLD_KIND, HOME_INDEX_HOLD_LAG, HOME_INDEX_HOLD_LEAD)
-ZMK_HRM(rhm, KEYS_L, HOME_MIDDY_HOLD_KIND, HOME_MIDDY_HOLD_LAG, HOME_MIDDY_HOLD_LEAD)
-ZMK_HRM(rhr, KEYS_L, HOME_RINGY_HOLD_KIND, HOME_RINGY_HOLD_LAG, HOME_RINGY_HOLD_LEAD)
-ZMK_HRM(rhp, KEYS_L, HOME_PINKY_HOLD_KIND, HOME_PINKY_HOLD_LAG, HOME_PINKY_HOLD_LEAD)
+ZMK_HRM(lhp, PINKY, KEYS_R)
+ZMK_HRM(lhr, RINGY, KEYS_R)
+ZMK_HRM(lhm, MIDDY, KEYS_R)
+ZMK_HRM(lhi, INDEX, KEYS_R)
+ZMK_HRM(rhi, INDEX, KEYS_L)
+ZMK_HRM(rhm, MIDDY, KEYS_L)
+ZMK_HRM(rhr, RINGY, KEYS_L)
+ZMK_HRM(rhp, PINKY, KEYS_L)
 
 #if HOME_INSTANT_SHIFT
 &lhi { hold-while-undecided; };
