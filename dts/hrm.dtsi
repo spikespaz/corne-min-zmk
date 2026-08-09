@@ -63,6 +63,21 @@
 #define HOME_INDEX_HOLD_KIND    "tap-preferred"
 #endif
 
+/* Which modifier each finger fires when held, as a "left, right" pair.
+ */
+#ifndef HOME_PINKY_HOLD_MOD
+#define HOME_PINKY_HOLD_MOD    LGUI, RGUI
+#endif
+#ifndef HOME_RINGY_HOLD_MOD
+#define HOME_RINGY_HOLD_MOD    LALT, RALT
+#endif
+#ifndef HOME_MIDDY_HOLD_MOD
+#define HOME_MIDDY_HOLD_MOD    LCTL, RCTL
+#endif
+#ifndef HOME_INDEX_HOLD_MOD
+#define HOME_INDEX_HOLD_MOD    LSFT, RSFT
+#endif
+
 /* Extend the grace period beyond TYPING_CADENCE after a tap, during which releasing
  * and then holding the same key again produces repeat events rather than the modifier.
  */
@@ -79,6 +94,10 @@
 #endif
 
 
+/* Each home key is a 2-cell hold-tap: <hold-mod> <tap-key>. Per-finger timing
+ * is determined by the parameters defined above; the third argument is the opposite
+ * hand's key positions, so a hold only triggers across hands.
+ */
 #define ZMK_HRM(name, finger, triggers, ...) \
     / { behaviors { name: name { \
         compatible = "zmk,behavior-hold-tap"; \
@@ -92,6 +111,13 @@
         hold-trigger-on-release; \
         __VA_ARGS__ }; }; };
 
+/* Select the left or right member of an "L, R" tuple.
+ */
+#define HRM_FST(a, b)    a
+#define HRM_SND(a, b)    b
+#define HRM_L(tuple)     HRM_FST(tuple)
+#define HRM_R(tuple)     HRM_SND(tuple)
+
 ZMK_HRM(lhp, PINKY, KEYS_R)
 ZMK_HRM(lhr, RINGY, KEYS_R)
 ZMK_HRM(lhm, MIDDY, KEYS_R)
@@ -100,6 +126,15 @@ ZMK_HRM(rhi, INDEX, KEYS_L)
 ZMK_HRM(rhm, MIDDY, KEYS_L)
 ZMK_HRM(rhr, RINGY, KEYS_L)
 ZMK_HRM(rhp, PINKY, KEYS_L)
+
+#define lhp(tap)    lhp  HRM_L(HOME_PINKY_HOLD_MOD)  tap
+#define lhr(tap)    lhr  HRM_L(HOME_RINGY_HOLD_MOD)  tap
+#define lhm(tap)    lhm  HRM_L(HOME_MIDDY_HOLD_MOD)  tap
+#define lhi(tap)    lhi  HRM_L(HOME_INDEX_HOLD_MOD)  tap
+#define rhi(tap)    rhi  HRM_R(HOME_INDEX_HOLD_MOD)  tap
+#define rhm(tap)    rhm  HRM_R(HOME_MIDDY_HOLD_MOD)  tap
+#define rhr(tap)    rhr  HRM_R(HOME_RINGY_HOLD_MOD)  tap
+#define rhp(tap)    rhp  HRM_R(HOME_PINKY_HOLD_MOD)  tap
 
 #if HOME_INSTANT_SHIFT
 &lhi { hold-while-undecided; };

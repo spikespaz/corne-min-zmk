@@ -1,0 +1,82 @@
+{
+  // ── Force the ZMK/DT files onto dts-lsp's language id ──────────────────
+  // dts-lsp only attaches to language "devicetree"; zmk-tools also claims
+  // .keymap/.overlay as "dts". Pin them so the LSP wins. zmk-tools'
+  // completions fire off the glob "**/*.keymap", so they still work.
+  "files.associations": {
+    "*.keymap": "devicetree",
+    "*.overlay": "devicetree",
+    "*.dtsi": "devicetree",
+    "*.dts": "devicetree"
+  },
+
+  // ── Stop dts-lsp fighting our formatting ───────────────────────────────
+  // The extension ships configurationDefaults that force tabs (insertSpaces
+  // false, tabSize 8) and report style deviations as diagnostics, which
+  // flags the hand-aligned layer art. Override both here.
+  "devicetree.defaultShowFormattingErrorAsDiagnostics": false,
+  "[devicetree]": {
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.tabSize": 4,
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+    "editor.formatOnPaste": false
+  },
+
+  // ── zmk-tools: keycode/behavior completions + snippets ─────────────────
+  // Reads these to locate your config; keycode data is fetched from
+  // github (zmkfirmware/zmk@main), not from .ws/zmk.
+  "zmk.configPath": "config",
+  "zmk.buildMatrixPath": "build.yaml",
+
+  // ── dts-lsp: real DT intelligence (hover / goto / diagnostics) ─────────
+  // Defaults apply to any DT file (incl. adhoc); ${workspaceFolder} IS
+  // expanded for these list fields.
+  "devicetree.defaultBindingType": "Zephyr",
+  "devicetree.autoChangeContext": true,
+  "devicetree.allowAdhocContexts": true,
+  "devicetree.defaultIncludePaths": [
+    "${workspaceFolder}/dts",
+    "${workspaceFolder}/config",
+    "${workspaceFolder}/.ws/corne-min-board/boards/arm/corne_min",
+    "${workspaceFolder}/.ws/zmk/app/dts",
+    "${workspaceFolder}/.ws/zmk/app/include",
+    "${workspaceFolder}/.ws/zephyr/dts",
+    "${workspaceFolder}/.ws/zephyr/dts/arm",
+    "${workspaceFolder}/.ws/zephyr/dts/common",
+    "${workspaceFolder}/.ws/zephyr/include"
+  ],
+  "devicetree.defaultZephyrBindings": [
+    "${workspaceFolder}/.ws/zmk/app/dts/bindings",
+    "${workspaceFolder}/.ws/zephyr/dts/bindings"
+  ],
+  "devicetree.contexts": [
+    {
+      "ctxName": "left",
+      "bindingType": "Zephyr",
+      "formattingErrorAsDiagnostics": false,
+      // NOTE: dtsFile + overlays are NOT ${workspaceFolder}-expanded by
+      // dts-lsp 0.12 and are dropped unless absolute -> must be absolute.
+      "dtsFile": "c:/Users/Jacob/Projects/corne-min-zmk/.ws/corne-min-board/boards/arm/corne_min/corne_min_left.dts",
+      "overlays": [
+        "c:/Users/Jacob/Projects/corne-min-zmk/config/corne_min.keymap"
+      ],
+      "includePaths": [
+        "${workspaceFolder}/dts",
+        "${workspaceFolder}/config",
+        "${workspaceFolder}/.ws/corne-min-board/boards/arm/corne_min",
+        "${workspaceFolder}/.ws/zmk/app/dts",
+        "${workspaceFolder}/.ws/zmk/app/include",
+        "${workspaceFolder}/.ws/zephyr/dts",
+        "${workspaceFolder}/.ws/zephyr/dts/arm",
+        "${workspaceFolder}/.ws/zephyr/dts/common",
+        "${workspaceFolder}/.ws/zephyr/include"
+      ],
+      "zephyrBindings": [
+        "${workspaceFolder}/.ws/zmk/app/dts/bindings",
+        "${workspaceFolder}/.ws/zephyr/dts/bindings"
+      ]
+    }
+  ]
+}
