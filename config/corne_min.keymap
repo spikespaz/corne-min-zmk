@@ -17,15 +17,21 @@
 #define KEYS_L  0  1  2  3  4  5  12 13 14 15 16 17  24 25 26 27 28 29  36 37 38
 #define KEYS_R  6  7  8  9 10 11  18 19 20 21 22 23  30 31 32 33 34 35  39 40 41
 
-/* activate shift the moment the home key is depressed, emit a character if not held */
-#define HOME_INSTANT_SHIFT ENABLED
 
-#include "hrm.dtsi"
+#define FUNCTION_HOLD_MS       400
+#define DELIBERATE_HOLD_MS    1000
+
+#include "complements.dtsi"
 
 /* hold duration before BT profile clear fires (long to prevent accidental re-pair) */
-#define BT_CLEAR_HOLD_MS 1000
+#define BT_CLEAR_HOLD_MS    DELIBERATE_HOLD_MS
 
 #include "bt_profile.dtsi"
+
+/* activate shift the moment the home key is depressed, emit a character if not held */
+#define HOME_INSTANT_SHIFT    ENABLED
+
+#include "hrm.dtsi"
 
 
 / {
@@ -36,32 +42,32 @@
             display-name = "Colemak-DH";
 /*
     Colemak Mod-DH customized by spikespaz
-    |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  |  -  |
-    | CAPSW|  A  |  R  |  S  |  T  |  G  |      |  M  |  N   |  E  |  I  |  O  |  '  |
-    |   `  |  Z  |  X  |  C  |  D  |  V  |      |  K  |  H   |  ,  |  .  |  /  |  \  |
-                       | GUI | LWR | SPC |      | ENT | RSE  | ALT |
+    |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L  |  U  |  Y  |  ;  |  -  |
+    | CAPSW|  A  |  R  |  S  |  T  |  G  |      |  M  |  N  |  E  |  I  |  O  |  '  |
+    |   `  |  Z  |  X  |  C  |  D  |  V  |      |  K  |  H  |  ,  |  .  |  /  |  \  |
+                       | SYS | ESC | SPC |      | BSPC| RET | RSE |
 */
             bindings = <
     &kp TAB     &kp Q      &kp W      &kp F      &kp P      &kp B           &kp J     &kp L      &kp U      &kp Y      &kp SEMI   &kp MINUS
     &caps_word  &lhp(A)    &lhr(R)    &lhm(S)    &lhi(T)    &kp G           &kp M     &rhi(N)    &rhm(E)    &rhr(I)    &rhp(O)    &kp SQT
     &kp GRAVE   &kp Z      &kp X      &kp C      &kp D      &kp V           &kp K     &kp H      &kp COMMA  &kp DOT    &kp FSLH   &kp BSLH
-    /*          |          |        */&kp LGUI   &mo 1      &kp SPACE       &kp RET   &mo 2      &kp RALT
+    /*          |          |        */&mo 1      &kp ESC    &kp SPACE       &kp BSPC  &kp RET    &mo 2
             >;
         };
 
-        lower_layer {
-            display-name = "Lower";
+        system_layer {
+            display-name = "System";
 /*
-    |  TAB   |  1  |  2  |  3  |  4  |  5  |      |  6  |  7  |  8  |  9  |  0  | BSPC |
-    | OUT_USB| BT1 | BT2 | BT3 | BT4 | BT5 |      | LFT | DWN |  UP | RGT |     |      |
-    | SHFT   |     |     |     |     |     |      |     |     |     |     |     |      |
-                         | GUI |     | SPC |      | ENT |     | ALT |
+    |  F1    |  F2 |  F3 |  F4 |  F5 |  F6 |      |   F7  |  F8 |  F9 | F10 | F11 |  F12 |
+    | OUT_USB| BT1 | BT2 | BT3 | BT4 | BT5 |      |PLY/NXT| VO+ | BR+ |     |     |      |
+    | SHFT   |     |     |     |     |     |      |MUT/PRV| VO- | BR- |     |     |PWR/ST|
+                         |     |     | SPC |      | ENT   |     |     |
 */
             bindings = <
-    &kp TAB       &kp N1       &kp N2       &kp N3       &kp N4       &kp N5            &kp N6      &kp N7      &kp N8    &kp N9       &kp N0    &kp BSPC
-    &out OUT_USB  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &kp LEFT    &kp DOWN    &kp UP    &kp RIGHT    &trans    &trans
-    &kp LSHFT     &trans       &trans       &trans       &trans       &trans            &trans      &trans      &trans    &trans       &trans    &trans
-    /*            |            |          */&kp LGUI     &trans       &kp SPACE         &kp RET     &trans      &kp RALT
+    &kp F1        &kp F2       &kp F3       &kp F4       &kp F5       &kp F6            &kp F7      &kp F8        &kp F9        &kp F10    &kp F11    &kp F12
+    &out OUT_USB  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &play_next  &kp C_VOL_UP  &bri_up_auto  &trans     &trans     &trans
+    &kp LSHFT     &trans       &trans       &trans       &trans       &trans            &mute_prev  &kp C_VOL_DN  &bri_dn_min   &trans     &trans     &power_studio
+    /*            |            |          */&trans       &trans       &kp SPACE         &kp RET     &trans        &trans
             >;
         };
 
