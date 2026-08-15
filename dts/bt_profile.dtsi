@@ -1,8 +1,8 @@
 #ifndef BT_CLEAR_HOLD_MS
-#define BT_CLEAR_HOLD_MS  10000
+#define BT_CLEAR_HOLD_MS    1000
 #endif
 
-#define bt_p(n) ht_bt_profile n n
+#define bt_p(n)    ht_bt_profile n n
 
 / {
     macros {
