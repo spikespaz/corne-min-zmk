@@ -81,6 +81,22 @@
             >;
         };
 
+        symbol_layer {
+            display-name = "Symbols";
+/*
+    |  ~  |  @  |  #  |  $  |  %  |  ^  |      |  :  |  &  |  |  |  ~  |  ;  |  \  |
+    |  &  |  _  |  =  |  -  |  +  |  *  |      |  !  |  [  |  {  |  }  |  ]  |  "  |
+    |  .  |  `  |  '  |  "  |  \  |  /  |      |  ?  |  <  |  (  |  )  |  >  |  ,  |
+                      |     |     |     |      |     |     |     |
+*/
+            bindings = <
+    &kp TILDE  &kp AT     &kp HASH   &kp DLLR   &kp PRCNT  &kp CARET      &kp COLON  &kp AMPS   &kp PIPE   &kp TILDE  &kp SEMI   &kp BSLH
+    &kp AMPS   &kp UNDER  &kp EQUAL  &kp MINUS  &kp PLUS   &kp ASTRK      &kp EXCL   &kp LBKT   &kp LBRC   &kp RBRC   &kp RBKT   &kp DQT
+    &kp DOT    &kp GRAVE  &kp SQT    &kp DQT    &kp BSLH   &kp FSLH       &kp QMARK  &kp LT     &kp LPAR   &kp RPAR   &kp GT     &kp COMMA
+    /*         |          |        */&trans     &trans     &trans         &trans     &trans     &trans
+            >;
+        };
+
         extra1 {
             display-name = "Extra-1";
             status = "reserved";
