@@ -1,0 +1,24 @@
+/* Soft-off wakes only on this half's top-right key, RC(0,5): the column is
+ * driven while off, the row raises the wakeup. Idle sleep still wakes on any
+ * key, through `wakeup-source` on the kscan.
+ */
+/ {
+    wake_keys {
+        compatible = "gpio-keys";
+        wake_key: wake_key {
+            gpios = <&gpio0 28 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+        };
+    };
+
+    wake_trigger: wake_trigger {
+        compatible = "zmk,gpio-key-wakeup-trigger";
+        trigger = <&wake_key>;
+        extra-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+        wakeup-source;
+    };
+
+    soft_off_wakers {
+        compatible = "zmk,soft-off-wakeup-sources";
+        wakeup-sources = <&wake_trigger>;
+    };
+};
