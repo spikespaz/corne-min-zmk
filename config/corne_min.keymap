@@ -39,13 +39,13 @@
     |  TAB |  Q  |  W  |  F  |  P  |  B  |      |  J  |  L   |  U  |  Y  |  ;  |  -  |
     | CAPSW|  A  |  R  |  S  |  T  |  G  |      |  M  |  N   |  E  |  I  |  O  |  '  |
     |   `  |  Z  |  X  |  C  |  D  |  V  |      |  K  |  H   |  ,  |  .  |  /  |  \  |
-                       | GUI | LWR | SPC |      | ENT | RSE  | ALT |
+                       | LWR | ESC | SPC |      | ENT | BSPC | RSE |
 */
             bindings = <
     &kp TAB     &kp Q      &kp W      &kp F      &kp P      &kp B           &kp J     &kp L      &kp U      &kp Y      &kp SEMI   &kp MINUS
     &caps_word  &lhp(A)    &lhr(R)    &lhm(S)    &lhi(T)    &kp G           &kp M     &rhi(N)    &rhm(E)    &rhr(I)    &rhp(O)    &kp SQT
     &kp GRAVE   &kp Z      &kp X      &kp C      &kp D      &kp V           &kp K     &kp H      &kp COMMA  &kp DOT    &kp FSLH   &kp BSLH
-    /*          |          |        */&kp LGUI   &mo 1      &kp SPACE       &kp RET   &mo 2      &kp RALT
+    /*          |          |        */&mo 1      &kp ESC    &kp SPACE       &kp RET   &kp BSPC   &mo 2
             >;
         };
 
