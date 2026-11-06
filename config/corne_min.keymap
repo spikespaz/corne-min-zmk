@@ -20,12 +20,12 @@
 /* activate shift the moment the home key is depressed, emit a character if not held */
 #define HOME_INSTANT_SHIFT ENABLED
 
-#include "hrm.dtsi"
+#include <behaviors/hrm.dtsi>
 
 /* hold duration before BT profile clear fires (long to prevent accidental re-pair) */
 #define BT_CLEAR_HOLD_MS 1000
 
-#include "bt_profile.dtsi"
+#include <behaviors/bt_profile.dtsi>
 
 
 / {
