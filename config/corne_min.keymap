@@ -53,13 +53,13 @@
             display-name = "Lower";
 /*
     |  TAB   |  1  |  2  |  3  |  4  |  5  |      |  6  |  7  |  8  |  9  |  0  | BSPC |
-    | OUT_USB| BT1 | BT2 | BT3 | BT4 | BT5 |      | LFT | DWN |  UP | RGT |     |      |
+    | OUT_TOG| BT1 | BT2 | BT3 | BT4 | BT5 |      | LFT | DWN |  UP | RGT |     |      |
     | SHFT   |     |     |     |     |     |      |     |     |     |     |     |      |
                          | GUI |     | SPC |      | ENT |     | ALT |
 */
             bindings = <
     &kp TAB       &kp N1       &kp N2       &kp N3       &kp N4       &kp N5            &kp N6      &kp N7      &kp N8    &kp N9       &kp N0    &kp BSPC
-    &out OUT_USB  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &kp LEFT    &kp DOWN    &kp UP    &kp RIGHT    &none     &none
+    &out OUT_TOG  &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &kp LEFT    &kp DOWN    &kp UP    &kp RIGHT    &none     &none
     &kp LSHFT     &none        &none        &none        &none        &none             &none       &none       &none     &none        &none     &none
     /*            |            |          */&kp LGUI     &none        &kp SPACE         &kp RET     &none       &kp RALT
             >;
