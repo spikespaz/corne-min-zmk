@@ -1,0 +1,8 @@
+# Copyright (c) 2026 Jacob Birkett
+# SPDX-License-Identifier: MIT
+
+description: Output toggle that won't store BLE until BLE can take over
+
+compatible: "zmk,behavior-usb-toggle"
+
+include: zero_param.yaml

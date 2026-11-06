@@ -7,8 +7,9 @@
 }: let
 
   filteredSrc = lib.sourceFilesBySuffices sourceRoot [
-    ".board" ".cmake" ".conf" ".defconfig" ".dts" ".dtsi"
-    ".json" ".keymap" ".overlay" ".shield" ".yml" "_defconfig"
+    ".board" ".c" ".cmake" ".conf" ".defconfig" ".dts" ".dtsi"
+    ".json" ".keymap" ".overlay" ".shield" ".txt" ".yaml" ".yml"
+    "Kconfig" "_defconfig"
   ];
 
   zephyrDepsHash = "sha256-qB4DEL4UldZoZc6C60reewAcwfbfR7SLuK2grfyMZuY=";

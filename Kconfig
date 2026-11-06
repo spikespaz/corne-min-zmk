@@ -1,0 +1,6 @@
+config ZMK_BEHAVIOR_USB_TOGGLE
+    bool
+    default y
+    depends on DT_HAS_ZMK_BEHAVIOR_USB_TOGGLE_ENABLED
+    depends on ZMK_BLE
+    depends on !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
