@@ -1,5 +1,10 @@
+#include <dt-bindings/zmk/behaviors.h>
+
 / {
     behaviors {
+#if ZMK_BEHAVIOR_OMIT(USB_TOG)
+        /omit-if-no-ref/
+#endif
         usb_tog: usb_tog {
             compatible = "zmk,behavior-usb-toggle";
             #binding-cells = <0>;
