@@ -67,14 +67,14 @@ COMPLEMENT_HOLD(none_boot, &none, &bootloader, DELIBERATE_HOLD_MS)
             display-name = "System";
 /*
     |  F1    |  F2 |  F3 |  F4 |  F5 |  F6  |      |   F7  |  F8 |  F9 | F10 | F11 |  F12 |
-    | CAPS   | GUI | ALT | CTL | SFT |      |      |PLY/NXT| VO+ | BR+ |     |     | PRSC |
-    | USB/BL | BT1 | BT2 | BT3 | BT4 | BT5  |      |MUT/PRV| VO- | BR- |     |     | BOOT |
+    | CAPS   | GUI | ALT | CTL | SFT |      |      |PLY/NXT| SFT | CTL | ALT | GUI | PRSC |
+    | USB/BL | BT1 | BT2 | BT3 | BT4 | BT5  |      |MUT/PRV| VO- | VO+ | BR- | BR+ | BOOT |
                          |     |     |PWR/ST|      | DEL   |     |     |
 */
             bindings = <
-    &kp F1        &kp F2       &kp F3       &kp F4       &kp F5       &kp F6            &kp F7      &kp F8        &kp F9        &kp F10    &kp F11    &kp F12
-    &kp CAPS      &kp LGUI     &kp LALT     &kp LCTL     &kp LSFT     &none             &play_next  &kp C_VOL_UP  &bri_up_auto  &none      &none      &kp PRSC
-    &usb_boot     &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &mute_prev  &kp C_VOL_DN  &bri_dn_min   &none      &none      &none_boot
+    &kp F1        &kp F2       &kp F3       &kp F4       &kp F5       &kp F6            &kp F7      &kp F8        &kp F9        &kp F10      &kp F11       &kp F12
+    &kp CAPS      &kp LGUI     &kp LALT     &kp LCTL     &kp LSFT     &none             &play_next  &kp RSFT      &kp RCTL      &kp RALT     &kp RGUI      &kp PRSC
+    &usb_boot     &bt_p(0)     &bt_p(1)     &bt_p(2)     &bt_p(3)     &bt_p(4)          &mute_prev  &kp C_VOL_DN  &kp C_VOL_UP  &bri_dn_min  &bri_up_auto  &none_boot
     /*            |            |          */&none        &none        &power_studio     &kp DEL     &none         &none
             >;
         };
