@@ -1,0 +1,9 @@
+/ {
+    behaviors {
+        usb_tog: usb_tog {
+            compatible = "zmk,behavior-usb-toggle";
+            #binding-cells = <0>;
+            display-name = "USB Toggle";
+        };
+    };
+};

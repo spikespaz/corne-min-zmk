@@ -1,0 +1,1 @@
+target_sources_ifdef(CONFIG_ZMK_BEHAVIOR_USB_TOGGLE app PRIVATE src/behaviors/behavior_usb_toggle.c)
