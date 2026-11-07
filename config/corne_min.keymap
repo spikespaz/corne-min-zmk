@@ -37,11 +37,9 @@
 
 /* For left-half system layer: tap sets output to USB, or long-hold to enter bootloader */
 COMPLEMENT_HOLD(usb_boot, &out OUT_USB, &bootloader, DELIBERATE_HOLD_MS)
-#define usb_boot    usb_boot 0 0
 
 /* For right-half system layer: long-hold to enter bootloader */
 COMPLEMENT_HOLD(none_boot, &none, &bootloader, DELIBERATE_HOLD_MS)
-#define none_boot    none_boot 0 0
 
 / {
     keymap {
