@@ -1,3 +1,21 @@
+/* COMPLEMENT_BIND(name, action) -- wrap a full binding as a parameterless
+ * behavior, for use where only a bare behavior is accepted.
+ *
+ * The wrapper must take no parameters, hold a full binding, and pass on the
+ * triggering event unchanged, so that the binding sees the original timestamp.
+ * Macros fail the last: they run their bindings from the behavior queue, which
+ * gives each one a new timestamp. Mod-morph meets all three. With `mods = <0>`
+ * it never morphs, so the required second binding is `&none`.
+ */
+#define COMPLEMENT_BIND(name, action)                                          \
+    name: name {                                                               \
+        compatible = "zmk,behavior-mod-morph";                                 \
+        #binding-cells = <0>;                                                  \
+        mods = <0>;                                                            \
+        bindings = <action>, <&none>;                                          \
+    };
+
+
 /* COMPLEMENT_HOLD(name, tap, hold, dwell) -- define a complement key: a tap of
  * `tap`, a deliberate hold of `hold`. Both are full bindings (&kp C_NEXT,
  * &soft_off, ...); `dwell` is the hold time in ms, one of the named dwell
@@ -27,32 +45,11 @@
                 tapping-term-ms = <dwell>;                                     \
                 bindings = <&name##_h>, <&name##_t>;                           \
             };                                                                 \
-        };                                                                     \
-        /* Bake each branch into a parameterless behavior the hold-tap can  */ \
-        /* name -- a macro with 0 binding cells: the action is fixed here,  */ \
-        /* never supplied at invocation.                                    */ \
-        macros {                                                               \
-            name##_t: name##_t {                                               \
-                compatible = "zmk,behavior-macro";                             \
-                #binding-cells = <0>;                                          \
-                /* No inter-step delay: fire as promptly as a raw binding.  */ \
-                wait-ms = <0>;                                                 \
-                /* Hold the binding for the hold-tap's whole press, so the  */ \
-                /* branch acts exactly as the binding driven directly and   */ \
-                /* sustains while held (a held volume/brightness key        */ \
-                /* repeats): press, pause for release, release.             */ \
-                bindings = <&macro_press tap>,                                 \
-                           <&macro_pause_for_release>,                         \
-                           <&macro_release tap>;                               \
-            };                                                                 \
-            name##_h: name##_h {                                               \
-                compatible = "zmk,behavior-macro";                             \
-                #binding-cells = <0>;                                          \
-                wait-ms = <0>;                                                 \
-                bindings = <&macro_press hold>,                                \
-                           <&macro_pause_for_release>,                         \
-                           <&macro_release hold>;                              \
-            };                                                                 \
+            /* Bake each branch into a parameterless behavior the hold-tap  */ \
+            /* can name: the action is fixed here, never supplied at        */ \
+            /* invocation.                                                  */ \
+            COMPLEMENT_BIND(name##_t, tap)                                     \
+            COMPLEMENT_BIND(name##_h, hold)                                    \
         };                                                                     \
     };
 
