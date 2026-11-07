@@ -19,6 +19,7 @@
 
 
 #define FUNCTION_HOLD_MS       400
+#define COMPLEMENT_REPRESS_MS  300
 #define DELIBERATE_HOLD_MS    1000
 
 #include "complements.dtsi"

@@ -16,16 +16,17 @@
     };
 
 
-/* COMPLEMENT_HOLD(name, tap, hold, dwell) -- define a complement key: a tap of
- * `tap`, a deliberate hold of `hold`. Both are full bindings (&kp C_NEXT,
- * &soft_off, ...); `dwell` is the hold time in ms, one of the named dwell
- * durations below (FUNCTION_HOLD_MS, DESTRUCTIVE_HOLD_MS) -- pick the most
+/* COMPLEMENT_HOLD(name, on_tap, on_hold, dwell) -- define a complement key: a
+ * tap of `on_tap`, a deliberate hold of `on_hold`. Both are full bindings
+ * (&kp C_NEXT, &soft_off, ...); `dwell` is the hold time in ms, one of the named
+ * dwell durations below (FUNCTION_HOLD_MS, DESTRUCTIVE_HOLD_MS) -- pick the most
  * specific that fits.
  *
  * The hold never fires by accident: it commits only past `dwell`, never on an
- * adjacent key. Each branch behaves exactly as its raw binding -- momentary
- * when tapped, sustained when held -- so auto-repeating keys (volume,
- * brightness) still ramp.
+ * adjacent key. Each branch behaves exactly as its raw binding: a hold starts
+ * at `dwell` and stays down until release. Pressing the same key again within
+ * COMPLEMENT_REPRESS_MS of its last press forces the tap, so tap-then-hold
+ * stays down like a plain &kp.
  *
  * Write each complement as an adjacent pair: the factory, then a one-line
  * shadow `#define name name 0 0`. That macro lives in the preprocessor's
@@ -33,7 +34,7 @@
  * supplies the two cells ZMK requires -- completing the sugar that lets the
  * keymap invoke bare `&name`.
  */
-#define COMPLEMENT_HOLD(name, tap, hold, dwell)                                \
+#define COMPLEMENT_HOLD(name, on_tap, on_hold, dwell)                          \
     / {                                                                        \
         behaviors {                                                            \
             name: name {                                                       \
@@ -43,13 +44,14 @@
                 #binding-cells = <2>;                                          \
                 flavor = "tap-preferred";                                      \
                 tapping-term-ms = <dwell>;                                     \
+                quick-tap-ms = <COMPLEMENT_REPRESS_MS>;                        \
                 bindings = <&name##_h>, <&name##_t>;                           \
             };                                                                 \
             /* Bake each branch into a parameterless behavior the hold-tap  */ \
             /* can name: the action is fixed here, never supplied at        */ \
             /* invocation.                                                  */ \
-            COMPLEMENT_BIND(name##_t, tap)                                     \
-            COMPLEMENT_BIND(name##_h, hold)                                    \
+            COMPLEMENT_BIND(name##_t, on_tap)                                  \
+            COMPLEMENT_BIND(name##_h, on_hold)                                 \
         };                                                                     \
     };
 
@@ -59,6 +61,14 @@
  * (e.g. DELIBERATE_HOLD_MS). */
 #ifndef FUNCTION_HOLD_MS
 #define FUNCTION_HOLD_MS    600
+#endif
+
+/* COMPLEMENT_REPRESS_MS: window after a complement's press in which pressing it
+ * again forces the tap, whatever the dwell. Taken from the first press, not its
+ * release.
+ */
+#ifndef COMPLEMENT_REPRESS_MS
+#define COMPLEMENT_REPRESS_MS    300
 #endif
 
 /* play/pause; hold skips forward */
